@@ -1,0 +1,143 @@
+package World;
+
+import Actors.Human;
+import Buildings.House;
+import Events.RandomEvents;
+import GameSystems.Careers.Career;
+
+import java.util.ArrayList;
+
+public class World {
+    private int daysPerYear;
+    private int skillIncreaseBalancing;
+
+    private ArrayList<House> houses;
+    private ArrayList<Human> humans;
+    private ArrayList<Human> tracked;
+    private ArrayList<Career> jobs;
+
+    private double cityBudget;
+
+    public World(int houses, int population) {
+        daysPerYear = 100;
+        this.houses = new ArrayList<>();
+        for (int i = 0; i < houses; i++) {
+            this.houses.add(new House());
+        }
+        humans = new ArrayList<>();
+        for (int i = 0; i < population; i++) {
+            humans.add(new Human(daysPerYear, this));
+        }
+        tracked = new ArrayList<>();
+        jobs = new ArrayList<>();
+        int jobN = (int) (Math.random() * population);
+        if (jobN < population / 5) {
+            jobN = population / 5;
+        }
+        for (int i = 0; i < jobN; i++) {
+            RandomEvents.careerOption(this);
+        }
+        cityBudget = population * 100;
+        skillIncreaseBalancing = 5;
+    }
+
+    public void update() {
+        for (House house : houses) {
+            house.update(daysPerYear);
+        }
+        for (Human human : humans) {
+            human.update(daysPerYear, skillIncreaseBalancing, this);
+        }
+        while (Math.random() < humans.size() * 1.0001 / houses.size()) {
+            RandomEvents.buildHouse(this);
+        }
+        while (Math.random() < humans.size() * 1.0001 / jobs.size()) {
+            RandomEvents.careerOption(this);
+        }
+    }
+
+    public void aid(Human human) {
+        double aid = 30000 - human.getBankAccount().getDeposit() * 0.7;
+        aid += human.getRelations().getDependentRelations().size() * 3000;
+        if (aid < cityBudget) {
+            cityBudget -= aid;
+            human.getBankAccount().deposit(aid);
+        } else {
+            human.getBankAccount().deposit(cityBudget);
+            cityBudget = 0;
+        }
+    }
+
+    public void addBudget(double cityBudget) {
+        this.cityBudget += cityBudget;
+    }
+
+    public void citySpending(double money) {
+        cityBudget -= money;
+    }
+
+    public int getDaysPerYear() {
+        return daysPerYear;
+    }
+
+    public void setDaysPerYear(int daysPerYear) {
+        this.daysPerYear = daysPerYear;
+    }
+
+    public int getSkillIncreaseBalancing() {
+        return skillIncreaseBalancing;
+    }
+
+    public void setSkillIncreaseBalancing(int skillIncreaseBalancing) {
+        this.skillIncreaseBalancing = skillIncreaseBalancing;
+    }
+
+    public ArrayList<House> getHouses() {
+        return houses;
+    }
+
+    public void setHouses(ArrayList<House> houses) {
+        this.houses = houses;
+    }
+
+    public ArrayList<Human> getHumans() {
+        return humans;
+    }
+
+    public void setHumans(ArrayList<Human> humans) {
+        this.humans = humans;
+    }
+
+    public ArrayList<Human> getTracked() {
+        return tracked;
+    }
+
+    public void setTracked(ArrayList<Human> tracked) {
+        this.tracked = tracked;
+    }
+
+    public ArrayList<Career> getJobs() {
+        return jobs;
+    }
+
+    public void setJobs(ArrayList<Career> jobs) {
+        this.jobs = jobs;
+    }
+
+    public double getCityBudget() {
+        return cityBudget;
+    }
+
+    public void setCityBudget(double cityBudget) {
+        this.cityBudget = cityBudget;
+    }
+
+    public void printInfo() {
+        System.out.println(cityBudget);
+        System.out.println();
+        for (Human human : humans) {
+            human.printInfo();
+        }
+        System.out.println();
+    }
+}
