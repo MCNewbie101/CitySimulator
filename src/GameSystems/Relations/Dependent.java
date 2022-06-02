@@ -7,6 +7,10 @@ public class Dependent extends Familial{
         super(self, person);
     }
 
+    public Dependent(Human self, Human person, int closeness, int abusivenessTo, int abusivenessFrom) {
+        super(self, person, closeness, abusivenessTo, abusivenessFrom);
+    }
+
     public void update(Human human) {
         for (Caretaker caretaker : getPerson().getRelations().getCaretakerRelations()) {
             if (caretaker.getPerson() == human) {
@@ -16,8 +20,7 @@ public class Dependent extends Familial{
         }
         if (getPerson().getAge().getYears() >= 18) {
             human.getRelations().getDependentRelations().remove(this);
-            human.getRelations().getFamilyRelations().add(new Familial(human, getPerson(), getCloseness()));
-            return;
+            human.getRelations().getFamilyRelations().add(new Familial(human, getPerson(), getCloseness(), getAbusivenessTo(), getAbusivenessFrom()));
         }
     }
 }

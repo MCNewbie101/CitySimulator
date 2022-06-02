@@ -12,8 +12,10 @@ public abstract class CloseRelation extends Relation {
         abusivenessFrom = (int) (Math.random() * person.getAttributes().getPersonality().getAggressiveness());
     }
 
-    public CloseRelation(Human self, Human person, int closeness) {
+    public CloseRelation(Human self, Human person, int closeness, int abusivenessTo, int abusivenessFrom) {
         super(self, person, closeness);
+        this.abusivenessTo = abusivenessTo;
+        this.abusivenessFrom = abusivenessFrom;
     }
 
     public int getAbusivenessTo() {

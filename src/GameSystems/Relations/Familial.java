@@ -8,8 +8,8 @@ public class Familial extends CloseRelation {
         setCloseness((int) (Math.random() * 50 + 50));
     }
 
-    public Familial(Human self, Human person, int closeness) {
-        super(self, person, closeness);
+    public Familial(Human self, Human person, int closeness, int abusivenessTo, int abusivenessFrom) {
+        super(self, person, closeness, abusivenessTo, abusivenessFrom);
     }
 
     public void update(Human self, int daysPerYear) {

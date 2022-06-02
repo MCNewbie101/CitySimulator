@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class World {
     private int daysPerYear;
+    private int secondsPerDay;
     private int skillIncreaseBalancing;
 
     private ArrayList<House> houses;
@@ -19,10 +20,12 @@ public class World {
     private double cityBudget;
 
     public World(int houses, int population) {
-        daysPerYear = 100;
+        daysPerYear = 1;
+        secondsPerDay = 30;
+        cityBudget = population * 1000 + houses * 500000;
         this.houses = new ArrayList<>();
         for (int i = 0; i < houses; i++) {
-            this.houses.add(new House());
+            RandomEvents.buildHouse(this);
         }
         humans = new ArrayList<>();
         for (int i = 0; i < population; i++) {
@@ -37,8 +40,11 @@ public class World {
         for (int i = 0; i < jobN; i++) {
             RandomEvents.careerOption(this);
         }
-        cityBudget = population * 100;
         skillIncreaseBalancing = 5;
+    }
+
+    public void updateController() {
+        //TODO: Run update every secondsPerDay seconds
     }
 
     public void update() {
@@ -82,6 +88,14 @@ public class World {
 
     public void setDaysPerYear(int daysPerYear) {
         this.daysPerYear = daysPerYear;
+    }
+
+    public int getSecondsPerDay() {
+        return secondsPerDay;
+    }
+
+    public void setSecondsPerDay(int secondsPerDay) {
+        this.secondsPerDay = secondsPerDay;
     }
 
     public int getSkillIncreaseBalancing() {

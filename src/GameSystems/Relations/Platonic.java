@@ -8,8 +8,8 @@ public class Platonic extends CloseRelation {
         setCloseness((int) (Math.random() * 50 + 30));
     }
 
-    public Platonic(Human self, Human person, int closeness) {
-        super(self, person, closeness);
+    public Platonic(Human self, Human person, int closeness, int abusivenessTo, int abusivenessFrom) {
+        super(self, person, closeness, abusivenessTo, abusivenessFrom);
     }
 
     public void update(Human self, int daysPerYear) {

@@ -46,16 +46,16 @@ public class Attributes {
         happiness += (Math.random() - Math.random()) * 30;
         happiness += Math.random() * (70 - health);
         if (human.getRelations().getLover() != null) {
-            happiness += human.getRelations().getLover().getRomance() * human.getRelations().getLover().getCloseness() / 50 / daysPerYear;
-            happiness -= human.getRelations().getLover().getAbusivenessFrom() * human.getRelations().getLover().getCloseness() / 5 / daysPerYear;
+            happiness += human.getRelations().getLover().getRomance() * human.getRelations().getLover().getCloseness() / 50.0 / daysPerYear;
+            happiness -= human.getRelations().getLover().getAbusivenessFrom() * human.getRelations().getLover().getCloseness() / 5.0 / daysPerYear;
         }
         for (Familial relation : human.getRelations().getFamilyRelations()) {
-            happiness += relation.getCloseness() / 10 / daysPerYear;
-            happiness -= relation.getAbusivenessFrom() * relation.getCloseness() / 5 / daysPerYear;
+            happiness += relation.getCloseness() / 10.0 / daysPerYear;
+            happiness -= relation.getAbusivenessFrom() * relation.getCloseness() / 5.0 / daysPerYear;
         }
         for (Platonic relation : human.getRelations().getFriendships()) {
-            happiness += relation.getCloseness() / 10 / daysPerYear;
-            happiness -= relation.getAbusivenessFrom() * relation.getCloseness() / 5 / daysPerYear;
+            happiness += relation.getCloseness() / 10.0 / daysPerYear;
+            happiness -= relation.getAbusivenessFrom() * relation.getCloseness() / 5.0 / daysPerYear;
         }
         if (happiness < -100) {
             happiness = -100;
@@ -66,8 +66,8 @@ public class Attributes {
     }
 
     public void updateHouse(Human human, int daysPerYear) {
-        happiness -= 10 / daysPerYear;
-        health -= 5 / daysPerYear;
+        happiness -= 30.0 / daysPerYear;
+        health -= 10.0 / daysPerYear;
         if (health <= 0) {
             human.setAlive(false);
         }
@@ -83,8 +83,8 @@ public class Attributes {
     }
 
     public void isOrphan(Human human, int daysPerYear) {
-        happiness -= 30 / daysPerYear;
-        health -= 5 / daysPerYear;
+        happiness -= 50.0 / daysPerYear;
+        health -= 15.0 / daysPerYear;
         if (health <= 0) {
             human.setAlive(false);
         }
@@ -101,26 +101,34 @@ public class Attributes {
 
     // TODO: Makes sure this actually make sense
     public void updateMoney(BankAccount bankAccount, int daysPerYear) {
-        if (bankAccount.getDeposit() < 10000 / daysPerYear) {
-            happiness -= 50 / daysPerYear;
-            health -= 30 / daysPerYear;
-        } else if (bankAccount.getDeposit() < 20000 / daysPerYear) {
-            happiness -= 30 / daysPerYear;
-            health -= 10 / daysPerYear;
+        if (bankAccount.getDeposit() < 10000.0 / daysPerYear) {
+            happiness -= 50.0 / daysPerYear;
+            health -= 30.0 / daysPerYear;
+        } else if (bankAccount.getDeposit() < 20000.0 / daysPerYear) {
+            happiness -= 30.0 / daysPerYear;
+            health -= 10.0 / daysPerYear;
             bankAccount.spend(10000);
-        } else if (bankAccount.getDeposit() < 30000 / daysPerYear) {
-            happiness -= 10 / daysPerYear;
-            health -= 3 / daysPerYear;
+        } else if (bankAccount.getDeposit() < 30000.0 / daysPerYear) {
+            happiness -= 10.0 / daysPerYear;
+            health -= 3.0 / daysPerYear;
             bankAccount.spend(20000);
-        } else if (bankAccount.getDeposit() < 40000 / daysPerYear) {
-            happiness -= 5 / daysPerYear;
-            bankAccount.spend(30000 / daysPerYear);
+        } else if (bankAccount.getDeposit() < 40000.0 / daysPerYear) {
+            happiness -= 5.0 / daysPerYear;
+            bankAccount.spend(30000.0 / daysPerYear);
         } else if (bankAccount.getDeposit() < 100000) {
             bankAccount.spend(40000);
         } else {
             happiness += 15;
             bankAccount.spend(bankAccount.getDeposit() * Math.random() * 0.3 + 40000);
         }
+    }
+
+    public void changeHappiness(double happiness) {
+        this.happiness += happiness;
+    }
+
+    public void changeHealth(double health) {
+        this.health += health;
     }
 
     public Personality getPersonality() {

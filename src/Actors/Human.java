@@ -4,8 +4,10 @@ import Buildings.House;
 import Events.RandomEvents;
 import GameSystems.*;
 import GameSystems.Careers.Career;
+import GameSystems.Careers.Retired;
 import GameSystems.Relations.Caretaker;
 import GameSystems.Relations.Familial;
+import GameSystems.Relations.Platonic;
 import GameSystems.Relations.Relations;
 import GameSystems.Skills.Skills;
 import World.World;
@@ -17,6 +19,7 @@ public class Human {
     private String gender;
     private Skills skills;
     private Career job;
+    private Retired retirement;
     private Education education;
     private House address;
     private Attributes attributes;
@@ -25,7 +28,7 @@ public class Human {
     private boolean isAlive;
 
     public Human(int daysPerYear, World world) {
-        age = new Age((int) (Math.random() * 50) + 18, (int) (Math.random() * daysPerYear));
+        age = new Age((int) (Math.random() * 30) + 18, (int) (Math.random() * daysPerYear));
         if (Math.random() * 2 < 1) {
             gender = "female";
         } else {
@@ -45,8 +48,10 @@ public class Human {
             if (house.getOwnedBy() == null) {
                 house.setOwnedBy(bankAccount);
                 address = house;
+                break;
             }
         }
+        retirement = null;
         attributes = new Attributes();
         education = new Education(attributes);
         education.setGradeLevel(12);
@@ -63,6 +68,7 @@ public class Human {
         }
         skills = new Skills(parent1.getSkills(), parent2.getSkills());
         job = null;
+        retirement = null;
         education = null;
         if (Math.random() * 2 < 1) {
             address = parent1.getAddress();
@@ -75,11 +81,12 @@ public class Human {
         isAlive = true;
     }
 
-    public Human(Age age, String gender, Skills skills, Career job, Education education, House address, Attributes attributes, Relations relations, BankAccount bankAccount) {
+    public Human(Age age, String gender, Skills skills, Career job, Education education, House address, Attributes attributes, Relations relations, BankAccount bankAccount, Retired retirement) {
         this.age = age;
         this.gender = gender;
         this.skills = skills;
         this.job = job;
+        this.retirement = retirement;
         this.education = education;
         this.address = address;
         this.attributes = attributes;
@@ -118,7 +125,7 @@ public class Human {
         }
         if (address == null) {
             if (age.getYears() >= 18) {
-                RandomEvents.houseSearch(this);
+                RandomEvents.houseSearch(this, world);
             } else {
                 for (Human caretaker : relations.getCaretakers()) {
                     if (caretaker.getAddress().isUsable()) {
@@ -132,7 +139,7 @@ public class Human {
             }
         } else if (!address.isUsable()) {
             if (age.getYears() >= 18) {
-                RandomEvents.houseSearch(this);
+                RandomEvents.houseSearch(this, world);
             } else {
                 for (Human caretaker : relations.getCaretakers()) {
                     if (caretaker.getAddress().isUsable()) {
@@ -158,6 +165,13 @@ public class Human {
                 for (Familial familial : relations.getFamilyRelations()) {
                     if (familial.getCloseness() - familial.getAbusivenessFrom() > Math.random() * 100) {
                         familial.getPerson().aid(this);
+                    }
+                }
+            }
+            if (bankAccount.getDeposit() < 40000) {
+                for (Platonic friend : relations.getFriendships()) {
+                    if (friend.getCloseness() - friend.getAbusivenessFrom() > Math.random() * 300) {
+                        friend.getPerson().aid(this);
                     }
                 }
             }

@@ -35,6 +35,9 @@ public abstract class Building {
             gen *= 0.9;
         }
         value *= gen / daysPerYear + 1;
+        if (Math.random() * 1000 < age.getYears()) {
+            usable = false;
+        }
     }
 
     public double getValue() {
