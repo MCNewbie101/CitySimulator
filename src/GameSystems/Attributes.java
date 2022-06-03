@@ -8,6 +8,7 @@ public class Attributes {
     private Personality personality;
     private double happiness;
     private double health;
+    private int trauma;
 
     public Attributes() {
         personality = new Personality();
@@ -21,12 +22,14 @@ public class Attributes {
             gen = (int) (90 + (gen - 90) * 0.95);
         }
         health = gen;
+        trauma = 0;
     }
 
     public Attributes(Attributes attributes1, Attributes attributes2) {
         personality = new Personality(attributes1.getPersonality(), attributes2.getPersonality());
         happiness = (int) (Math.random() * 50 + 50);
         health = (int) ((attributes1.getHealth() + attributes2.getHealth()) / 2 + Math.random() * 20 - 10);
+        trauma = 0;
     }
 
     public void update(Human human, int daysPerYear) {
@@ -57,17 +60,44 @@ public class Attributes {
             happiness += relation.getCloseness() / 10.0 / daysPerYear;
             happiness -= relation.getAbusivenessFrom() * relation.getCloseness() / 5.0 / daysPerYear;
         }
+        happiness -= trauma;
         if (happiness < -100) {
             happiness = -100;
         }
         if (happiness > 100) {
             happiness = 100;
         }
+        if (happiness < -70) {
+            trauma++;
+        }
+        if (health < 20) {
+            trauma++;
+        }
+        if (human.getAge().getYears() < 3) {
+            trauma *= 2.1;
+        } else if (human.getAge().getYears() < 6) {
+            trauma *= 1.8;
+        } else if (human.getAge().getYears() < 9) {
+            trauma *= 1.55;
+        } else if (human.getAge().getYears() < 12) {
+            trauma *= 1.35;
+        } else if (human.getAge().getYears() < 15) {
+            trauma *= 1.2;
+        } else if (human.getAge().getYears() < 19) {
+            trauma *= 1.1;
+        } else {
+            trauma *= 1.05;
+        }
     }
 
     public void updateHouse(Human human, int daysPerYear) {
         happiness -= 30.0 / daysPerYear;
         health -= 10.0 / daysPerYear;
+        checkInBounds(human);
+        trauma += 2;
+    }
+
+    private void checkInBounds(Human human) {
         if (health <= 0) {
             human.setAlive(false);
         }
@@ -85,29 +115,21 @@ public class Attributes {
     public void isOrphan(Human human, int daysPerYear) {
         happiness -= 50.0 / daysPerYear;
         health -= 15.0 / daysPerYear;
-        if (health <= 0) {
-            human.setAlive(false);
-        }
-        if (health > 100) {
-            health = 100;
-        }
-        if (happiness < -100) {
-            happiness = -100;
-        }
-        if (happiness > 100) {
-            happiness = 100;
-        }
+        checkInBounds(human);
+        trauma += 3;
     }
 
     // TODO: Makes sure this actually make sense
-    public void updateMoney(BankAccount bankAccount, int daysPerYear) {
+    public void updateMoney(Human human, BankAccount bankAccount, int daysPerYear) {
         if (bankAccount.getDeposit() < 10000.0 / daysPerYear) {
             happiness -= 50.0 / daysPerYear;
             health -= 30.0 / daysPerYear;
+            trauma += 2;
         } else if (bankAccount.getDeposit() < 20000.0 / daysPerYear) {
             happiness -= 30.0 / daysPerYear;
             health -= 10.0 / daysPerYear;
             bankAccount.spend(10000);
+            trauma++;
         } else if (bankAccount.getDeposit() < 30000.0 / daysPerYear) {
             happiness -= 10.0 / daysPerYear;
             health -= 3.0 / daysPerYear;
@@ -121,6 +143,7 @@ public class Attributes {
             happiness += 15;
             bankAccount.spend(bankAccount.getDeposit() * Math.random() * 0.3 + 40000);
         }
+        checkInBounds(human);
     }
 
     public void changeHappiness(double happiness) {
@@ -129,6 +152,10 @@ public class Attributes {
 
     public void changeHealth(double health) {
         this.health += health;
+    }
+
+    public void changeTrauma(int trauma) {
+        this.trauma += trauma;
     }
 
     public Personality getPersonality() {
@@ -155,8 +182,17 @@ public class Attributes {
         this.health = health;
     }
 
+    public int getTrauma() {
+        return trauma;
+    }
+
+    public void setTrauma(int trauma) {
+        this.trauma = trauma;
+    }
+
     public void printInfo() {
         System.out.println(happiness);
         System.out.println(health);
+        System.out.println(trauma);
     }
 }

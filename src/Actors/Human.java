@@ -175,7 +175,7 @@ public class Human {
                     }
                 }
             }
-            attributes.updateMoney(bankAccount, daysPerYear);
+            attributes.updateMoney(this, bankAccount, daysPerYear);
         }
     }
 

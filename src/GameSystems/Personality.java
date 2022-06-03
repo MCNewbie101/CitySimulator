@@ -6,7 +6,6 @@ public class Personality {
     private int sociability;
     private int impulsiveness;
     private int openness;
-    private int generosity;
     private int selfishness;
 
     public Personality() {
@@ -39,12 +38,6 @@ public class Personality {
         while (Math.random() * 10 < 9) {
             gen = (int) (50 + (gen - 50) * 0.95);
         }
-        generosity = gen;
-        gen = (int) (Math.random() * 100);
-        while (Math.random() * 10 < 9) {
-            gen = (int) (50 + (gen - 50) * 0.95);
-        }
-        selfishness = gen;
     }
 
     public Personality(Personality personality1, Personality personality2) {
@@ -77,12 +70,6 @@ public class Personality {
             openness = 100;
         } else if (openness < 0) {
             openness = 0;
-        }
-        generosity = (int) (Math.random() * 50 - 25 + (personality1.getImpulsiveness() + personality2.getImpulsiveness()) / 2);
-        if (generosity > 100) {
-            generosity = 100;
-        } else if (generosity < 0) {
-            generosity = 0;
         }
         selfishness = (int) (Math.random() * 50 - 25 + (personality1.getImpulsiveness() + personality2.getImpulsiveness()) / 2);
         if (selfishness > 100) {
@@ -139,14 +126,6 @@ public class Personality {
 
     public void setOpenness(int openness) {
         this.openness = openness;
-    }
-
-    public int getGenerosity() {
-        return generosity;
-    }
-
-    public void setGenerosity(int generosity) {
-        this.generosity = generosity;
     }
 
     public int getSelfishness() {

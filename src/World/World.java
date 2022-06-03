@@ -54,10 +54,14 @@ public class World {
         for (Human human : humans) {
             human.update(daysPerYear, skillIncreaseBalancing, this);
         }
-        while (Math.random() < humans.size() * 1.0001 / houses.size()) {
+        double gen = humans.size() * 1.0 / houses.size();
+        if (humans.size() * 1.0 / houses.size() >= 2.9) {
+            gen = 2.9;
+        }
+        while (Math.random() * 3 < gen) {
             RandomEvents.buildHouse(this);
         }
-        while (Math.random() < humans.size() * 1.0001 / jobs.size()) {
+        while (Math.random() * 3 < humans.size() * 1.0 / jobs.size()) {
             RandomEvents.careerOption(this);
         }
     }

@@ -62,6 +62,8 @@ public class BankAccount {
         if (deposit < 0) {
             deposit = 0;
         }
+        int temp = (int) (deposit * 100);
+        deposit = temp / 100.0;
     }
 
     public void spend(double money) {

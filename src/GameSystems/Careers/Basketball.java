@@ -9,6 +9,7 @@ public class Basketball extends Career{
 
     public Basketball() {
         super();
+        setBase(baseSalary);
         setSalary(baseSalary);
         setSalaryGrowth(salaryGrowth);
         setSkills(new Skills(new Creativity(0, 0, 0, 0), new Mental(0, 0, 0, 0, 0), new Physical(0, 100, 100, 0, 100), new Social(0, 0, 3, 0)));
