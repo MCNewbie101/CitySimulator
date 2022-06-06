@@ -17,23 +17,6 @@ import World.World;
 import java.util.ArrayList;
 
 public class RandomEvents {
-    public static void jobSearch(Human human, World world) {
-        for (Career career : world.getJobs()) {
-            if (career.isTaken()) {
-                continue;
-            }
-            if (human.getAge().getYears() < career.getRetirementAge()) {
-                if (career.getSkills().checkSkills(human.getSkills()) > Math.random() * 50 - 25) {
-                    if (human.getEducation().getGrade() > Math.random() * career.getSalary() / 300) {
-                        career.setTaken(true);
-                        human.setJob(career);
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
     public static void humanDeath(Human human, World world) {
         world.getHumans().remove(human);
         for (Human check : world.getHumans()) {
@@ -46,16 +29,21 @@ public class RandomEvents {
                 RandomEvents.familyDeath(check, human);
             } else if (check.getRelations().getFriends().contains(human)) {
                 RandomEvents.friendDeath(check, human);
+            } else if (check.getRelations().getDependents().contains(human)) {
+                RandomEvents.childDeath(check, human);
             } else if (check.getRelations().getOther().contains(human)) {
                 check.getRelations().getOtherRelations().remove(check.getRelations().getOther().indexOf(human));
             }
         }
+        RandomEvents.nullifyJob(human);
+        human.getAddress().setOwnedBy(null);
     }
 
     private static void friendDeath(Human check, Human human) {
         for (Platonic friendship : check.getRelations().getFriendships()) {
             if (friendship.getPerson() == human) {
                 check.getAttributes().changeHappiness(-friendship.getCloseness() * 0.7);
+                check.getAttributes().changeTrauma(friendship.getCloseness() / 20);
                 check.getRelations().getFriendships().remove(friendship);
                 return;
             }
@@ -66,6 +54,7 @@ public class RandomEvents {
         for (Familial familial : check.getRelations().getFamilyRelations()) {
             if (familial.getPerson() == human) {
                 check.getAttributes().changeHappiness(-familial.getCloseness());
+                check.getAttributes().changeTrauma(familial.getCloseness() / 15);
                 check.getRelations().getFamilyRelations().remove(familial);
                 return;
             }
@@ -73,15 +62,18 @@ public class RandomEvents {
     }
 
     private static void partnerDeath(Human check) {
+        check.getAttributes().changeTrauma(check.getRelations().getLover().getCloseness() / 10);
         check.getAttributes().changeHappiness(-check.getRelations().getLover().getCloseness() * 1.05);
         check.getRelations().setLover(null);
     }
 
-    public static void houseSearch(Human human, World world) {
-        for (House house : world.getHouses()) {
-            if (human.getAddress() == null && human.getBankAccount().getDeposit() > house.getValue()) {
-                house.setOwnedBy(human.getBankAccount());
-                human.getBankAccount().spend(house.getValue());
+    private static void childDeath(Human check, Human human) {
+        for (Dependent dependent : check.getRelations().getDependentRelations()) {
+            if (dependent.getPerson() == human) {
+                check.getAttributes().changeHappiness(-dependent.getCloseness() * 1.5);
+                check.getAttributes().changeTrauma(dependent.getCloseness() / 5);
+                check.getRelations().getFamilyRelations().remove(dependent);
+                return;
             }
         }
     }
@@ -89,6 +81,7 @@ public class RandomEvents {
     public static void inheritance(Human human) {
         double split = 0;
         for (Dependent dependent : human.getRelations().getDependentRelations()) {
+            dependent.getPerson().getAttributes().changeTrauma(dependent.getCloseness() / 5);
             split += dependent.getCloseness();
             dependent.getPerson().getAttributes().changeHappiness(-dependent.getCloseness() * 1.1);
             dependent.getPerson().getRelations().setCaretakers(new ArrayList<>());
@@ -134,17 +127,28 @@ public class RandomEvents {
         }
     }
 
-    public static void fired(Human human) {
-        human.getJob().setTaken(false);
-        human.setJob(null);
+    public static void houseSearch(Human human, World world) {
+        for (House house : world.getHouses()) {
+            if (human.getAddress() == null && human.getBankAccount().getDeposit() > house.getValue()) {
+                house.setOwnedBy(human.getBankAccount());
+                human.getBankAccount().spend(house.getValue());
+            }
+        }
     }
 
     public static void buildHouse(World world) {
         if (world.getCityBudget() < 100000) {
             return;
         }
-        int value = (int) (Math.random() * 10000000);
-        while (Math.random() * 15 < 14) {
+        int value;
+        if (world.getHumans() == null) {
+            value = (int) (Math.random() * 700000) + 300000;
+        } else if (world.getHumans().size() < world.getHouses().size() * 1.5) {
+            value = (int) (Math.random() * 700000) + 300000;
+        } else {
+            value = (int) (Math.random() * 9300000) + 300000;
+        }
+        while (Math.random() * 10 < 9) {
             if (value <= 100000) {
                 break;
             }
@@ -155,6 +159,39 @@ public class RandomEvents {
         }
         world.getHouses().add(new House(value, true, new Age(), new Position(), null));
         world.citySpending(value);
+    }
+    public static void jobSearch(Human human, World world) {
+        for (Career career : world.getJobs()) {
+            if (career.isTaken()) {
+                continue;
+            }
+            if (human.getAge().getYears() < career.getRetirementAge()) {
+                if (career.getSkills().checkSkills(human.getSkills()) > Math.random() * 50 - 25) {
+                    if (human.getEducation().getGrade() > Math.random() * career.getSalary() / 300) {
+                        career.setTaken(true);
+                        human.setJob(career);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public static void nullifyJob(Human human) {
+        human.getJob().setTaken(false);
+        human.getJob().setPerformance(0);
+        human.getJob().setSalary(human.getJob().getBase());
+        human.setJob(null);
+    }
+
+    public static void fired(Human human) {
+        human.getAttributes().changeHappiness(-30);
+        RandomEvents.nullifyJob(human);
+    }
+
+    public static void quitJob(Human human) {
+        human.getAttributes().changeHappiness(-human.getJob().getSatisfaction());
+        RandomEvents.nullifyJob(human);
     }
 
     public static void careerOption(World world) {

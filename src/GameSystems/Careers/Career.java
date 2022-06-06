@@ -2,10 +2,10 @@ package GameSystems.Careers;
 
 import Actors.Human;
 import Events.RandomEvents;
-import GameSystems.Attributes;
 import GameSystems.Skills.Skills;
 
 public abstract class Career {
+    private double base;
     private double salary;
     private int salaryGrowth;
     private int satisfaction;
@@ -14,13 +14,15 @@ public abstract class Career {
     private boolean taken;
     private int retirementAge;
 
+    //TODO: Change satisfaction based on person
     public Career() {
-        satisfaction = (int) (Math.random() * 100);
+//        satisfaction = (int) (Math.random() * 100);
         performance = 0;
         taken = false;
     }
 
-    public Career(double salary, int salaryGrowth, int satisfaction, int performance, Skills skills, boolean taken, int retirementAge) {
+    public Career(double base, double salary, int salaryGrowth, int satisfaction, int performance, Skills skills, boolean taken, int retirementAge) {
+        this.base = base;
         this.salary = salary;
         this.salaryGrowth = salaryGrowth;
         this.satisfaction = satisfaction;
@@ -43,6 +45,25 @@ public abstract class Career {
         if (performance > 0) {
             salary += salaryGrowth * performance;
         }
+        if (satisfaction < -10) {
+            if (-Math.random() * 100 > satisfaction) {
+                if (human.getAttributes().getHappiness() >= 0) {
+                    RandomEvents.quitJob(human);
+                } else {
+                    if (-Math.random() * 100 < human.getAttributes().getHappiness()) {
+                        RandomEvents.quitJob(human);
+                    }
+                }
+            }
+        }
+    }
+
+    public double getBase() {
+        return base;
+    }
+
+    public void setBase(double base) {
+        this.base = base;
     }
 
     public double getSalary() {
