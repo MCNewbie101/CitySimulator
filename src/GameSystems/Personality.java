@@ -7,6 +7,7 @@ public class Personality {
     private int impulsiveness;
     private int openness;
     private int selfishness;
+    private int[] careerPreferences;
 
     public Personality() {
         int gen = (int) (Math.random() * 100);
@@ -38,6 +39,8 @@ public class Personality {
         while (Math.random() * 10 < 9) {
             gen = (int) (50 + (gen - 50) * 0.95);
         }
+        selfishness = gen;
+        generateCareerPreferences();
     }
 
     public Personality(Personality personality1, Personality personality2) {
@@ -76,6 +79,22 @@ public class Personality {
             selfishness = 100;
         } else if (selfishness < 0) {
             selfishness = 0;
+        }
+        generateCareerPreferences();
+    }
+
+    public void generateCareerPreferences() {
+        careerPreferences = new int[3];
+        careerPreferences[0] = (int) (confidence + sociability / 2 - Math.random() * 50);
+        careerPreferences[1] = (int) (aggressiveness / 10 + Math.random() * 90);
+        careerPreferences[2] = (int) (Math.random() * 100);
+        for (int i = 0; i < careerPreferences.length; i++) {
+            if (careerPreferences[i] < 0) {
+                careerPreferences[i] = 0;
+            }
+            if (careerPreferences[i] > 100) {
+                careerPreferences[i] = 100;
+            }
         }
     }
 
@@ -134,5 +153,13 @@ public class Personality {
 
     public void setSelfishness(int selfishness) {
         this.selfishness = selfishness;
+    }
+
+    public int[] getCareerPreferences() {
+        return careerPreferences;
+    }
+
+    public void setCareerPreferences(int[] careerPreferences) {
+        this.careerPreferences = careerPreferences;
     }
 }

@@ -2,6 +2,7 @@ package GameSystems;
 
 import Buildings.House;
 import GameSystems.Careers.Career;
+import GameSystems.Careers.Retired;
 import World.World;
 
 public class BankAccount {
@@ -18,11 +19,13 @@ public class BankAccount {
         this.deposit = deposit;
     }
 
-    public void update(Career job, World world, House house, int daysPerYear) {
+    public void update(Career job, Retired retired, World world, House house, int daysPerYear) {
         deposit += deposit * INTEREST_RATE / daysPerYear;
         double earning = 0;
         if (job != null) {
             earning = job.getSalary() / daysPerYear;
+        } else if (retired != null) {
+            deposit += retired.getPension();
         }
         if (earning > 1000000 / daysPerYear) {
             deposit += (earning - 1000000 / daysPerYear) * (100 - INCOME_TAX[5]);

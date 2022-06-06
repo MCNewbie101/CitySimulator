@@ -1,5 +1,7 @@
 package GameSystems.Careers;
 
+import GameSystems.BankAccount;
+
 public class Retired {
     private double pension;
 

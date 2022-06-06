@@ -13,6 +13,7 @@ import GameSystems.Skills.Skills;
 import World.World;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Human {
     private Age age;
@@ -25,6 +26,7 @@ public class Human {
     private Attributes attributes;
     private Relations relations;
     private BankAccount bankAccount;
+    private int s;
     private boolean isAlive;
 
     public Human(int daysPerYear, World world) {
@@ -56,6 +58,16 @@ public class Human {
         education = new Education(attributes);
         education.setGradeLevel(12);
         relations = new Relations();
+        gen = (int) (Math.random() * 100);
+        if (gen < 90) {
+            s = 0;
+        } else if (gen < 93) {
+            s = 1;
+        } else if (gen < 97) {
+            s = 2;
+        } else {
+            s = 3;
+        }
         isAlive = true;
     }
 
@@ -100,9 +112,9 @@ public class Human {
             if (bankAccount != null) {
                 if (!relations.getFamily().isEmpty()) {
                     if (relations.getLover() == null) {
-                        RandomEvents.inheritance(this);
+                        RandomEvents.inheritance(this, world);
                     } else if (!relations.getLover().isMarried() || !relations.getLover().getPerson().isAlive) {
-                        RandomEvents.inheritance(this);
+                        RandomEvents.inheritance(this, world);
                     }
                 }
             }
@@ -154,8 +166,22 @@ public class Human {
         }
         attributes.update(this, daysPerYear);
         relations.update(this, daysPerYear);
+        if (relations.getLover() == null) {
+            if (age.getYears() >= 16 && s != 4) {
+                RandomEvents.findDate(this, world);
+            }
+        } else if (!relations.getLover().isMarried()) {
+            if (age.getYears() > 18 && relations.getLover().getPerson().getAge().getYears() > 18) {
+                RandomEvents.marriage(this);
+            }
+        } else {
+            if (gender.equals("female")) {
+
+                int gen = (int) (Math.random() * 100);
+            }
+        }
         if (bankAccount != null) {
-            bankAccount.update(job, world, address, daysPerYear);
+            bankAccount.update(job, retirement, world, address, daysPerYear);
         }
         if (age.getYears() >= 18) {
             if (bankAccount.getDeposit() < 30000) {
@@ -176,6 +202,9 @@ public class Human {
                 }
             }
             attributes.updateMoney(this, bankAccount, daysPerYear);
+        }
+        if (age.getYears() >= 16 && s != 4) {
+            RandomEvents.findDate(this, world);
         }
     }
 
@@ -277,6 +306,22 @@ public class Human {
 
     public void setAlive(boolean alive) {
         isAlive = alive;
+    }
+
+    public Retired getRetirement() {
+        return retirement;
+    }
+
+    public void setRetirement(Retired retirement) {
+        this.retirement = retirement;
+    }
+
+    public int getS() {
+        return s;
+    }
+
+    public void setS(int s) {
+        this.s = s;
     }
 
     public void printInfo() {

@@ -10,6 +10,7 @@ public abstract class CloseRelation extends Relation {
         super(self, person);
         abusivenessTo = (int) (Math.random() * person.getAttributes().getPersonality().getAggressiveness());
         abusivenessFrom = (int) (Math.random() * person.getAttributes().getPersonality().getAggressiveness());
+        self.getAttributes().getPersonality().compatibility(person.getAttributes().getPersonality());
     }
 
     public CloseRelation(Human self, Human person, int closeness, int abusivenessTo, int abusivenessFrom) {

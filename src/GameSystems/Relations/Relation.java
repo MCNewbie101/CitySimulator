@@ -8,6 +8,7 @@ public abstract class Relation {
 
     public Relation(Human self, Human person) {
         this.person = person;
+        closeness = (int) (Math.random() * 10);
     }
     public Relation(Human self, Human person, int closeness) {
         this.person = person;

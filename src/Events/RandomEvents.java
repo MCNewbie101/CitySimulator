@@ -8,13 +8,11 @@ import GameSystems.Careers.Basketball;
 import GameSystems.Careers.Career;
 import GameSystems.Careers.Programmer;
 import GameSystems.Position;
-import GameSystems.Relations.Caretaker;
-import GameSystems.Relations.Dependent;
-import GameSystems.Relations.Familial;
-import GameSystems.Relations.Platonic;
+import GameSystems.Relations.*;
 import World.World;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class RandomEvents {
     public static void humanDeath(Human human, World world) {
@@ -78,7 +76,7 @@ public class RandomEvents {
         }
     }
 
-    public static void inheritance(Human human) {
+    public static void inheritance(Human human, World world) {
         double split = 0;
         for (Dependent dependent : human.getRelations().getDependentRelations()) {
             dependent.getPerson().getAttributes().changeTrauma(dependent.getCloseness() / 5);
@@ -123,6 +121,23 @@ public class RandomEvents {
                 for (Familial familial : human.getRelations().getFamilyRelations()) {
                     familial.getPerson().getBankAccount().deposit(split * familial.getCloseness());
                 }
+            } else {
+                for (Platonic friend : human.getRelations().getFriendships()) {
+                    if (friend.getCloseness() > 30) {
+                        split += friend.getCloseness();
+                    }
+                }
+                if (split != 0) {
+                    split = human.getBankAccount().getDeposit() / split;
+                    if (split > 1000) {
+                        split = 1000;
+                    }
+                    for (Platonic friend : human.getRelations().getFriendships()) {
+                        friend.getPerson().getBankAccount().deposit(split * friend.getCloseness());
+                        human.getBankAccount().spend(split);
+                    }
+                }
+                world.addBudget(human.getBankAccount().getDeposit());
             }
         }
     }
@@ -160,6 +175,7 @@ public class RandomEvents {
         world.getHouses().add(new House(value, true, new Age(), new Position(), null));
         world.citySpending(value);
     }
+
     public static void jobSearch(Human human, World world) {
         for (Career career : world.getJobs()) {
             if (career.isTaken()) {
@@ -170,6 +186,13 @@ public class RandomEvents {
                     if (human.getEducation().getGrade() > Math.random() * career.getSalary() / 300) {
                         career.setTaken(true);
                         human.setJob(career);
+                        career.setSatisfaction((int) (human.getAttributes().getPersonality().getCareerPreferences()[career.getCareerID()] * 2 - 100 + Math.random() * 30 - Math.random() * 30));
+                        if (career.getSatisfaction() < -100) {
+                            career.setSatisfaction(-100);
+                        }
+                        if (career.getSatisfaction() > 100) {
+                            career.setSatisfaction(100);
+                        }
                         return;
                     }
                 }
@@ -199,9 +222,69 @@ public class RandomEvents {
         if (gen == 0) {
             world.getJobs().add(new Actor());
         } else if (gen == 1) {
-            world.getJobs().add(new Programmer());
-        } else if (gen == 2) {
             world.getJobs().add(new Basketball());
+        } else if (gen == 2) {
+            world.getJobs().add(new Programmer());
         }
+    }
+
+    public static void findDate(Human human, World world) {
+        if (human.getRelations().getLover() != null) {
+            return;
+        }
+        for (Human human1 : world.getHumans()) {
+            if (human.getRelations().getFamily().contains(human1) || human.getRelations().getDependents().contains(human1) || human.getRelations().getCaretakers().contains(human1)) {
+                return;
+            }
+            if (human1.getAge().getYears() < 15 || human1.getAge().getYears() / 2 + 7 < human.getAge().getYears() || human.getAge().getYears() / 2 + 7 < human1.getAge().getYears() || human1.getRelations().getLover() != null) {
+                continue;
+            }
+            if (Math.random() * Math.abs(human.getAge().getYears() - human1.getAge().getYears()) > 3) {
+                continue;
+            }
+            if (!Objects.equals(human1.getGender(), human.getGender())) {
+                if ((human.getS() == 0 || human.getS() == 2) && (human1.getS() == 0 || human1.getS() == 2)) {
+                    if (human.getAttributes().getPersonality().compatibility(human1.getAttributes().getPersonality()) > Math.random() * 100) {
+                        human.getRelations().setLover(new Romantic(human, human1));
+                        human1.getRelations().setLover(new Romantic(human1, human));
+                        if (human.getRelations().getFriends().contains(human1)) {
+                            //TODO: Remove friendship
+                        }
+                        return;
+                    }
+                }
+            } else {
+                if ((human.getS() == 1 || human.getS() == 2) && (human1.getS() == 1 || human1.getS() == 2)) {
+                    if (human.getAttributes().getPersonality().compatibility(human1.getAttributes().getPersonality()) > Math.random() * 100) {
+                        human.getRelations().setLover(new Romantic(human, human1));
+                        human1.getRelations().setLover(new Romantic(human1, human));
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public static void marriage(Human human) {
+        if (human.getRelations().getLover() == null || human.getAge().getYears() <= 18) {
+            return;
+        }
+        if (human.getRelations().getLover().getCloseness() > Math.random() * 50 + 50 && human.getRelations().getLover().getPerson().getAge().getYears() > 18) {
+            if (human.getRelations().getLover().getYearsTogether().getYears() > 3) {
+                human.getRelations().getLover().setMarried(true);
+                human.getRelations().getLover().getPerson().getRelations().getLover().setMarried(true);
+            }
+        }
+    }
+
+    public static void childBirth(Human human, World world) {
+        if (!human.getGender().equals("female") || human.getRelations().getLover() == null) {
+            return;
+        }
+        if (!human.getRelations().getLover().isMarried()) {
+            return;
+        }
+        Human child = new Human(human, human.getRelations().getLover().getPerson());
+        world.getHumans().add(child);
     }
 }

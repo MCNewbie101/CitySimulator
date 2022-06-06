@@ -13,6 +13,7 @@ public abstract class Career {
     private Skills skills;
     private boolean taken;
     private int retirementAge;
+    private int careerID;
 
     //TODO: Change satisfaction based on person
     public Career() {
@@ -21,7 +22,7 @@ public abstract class Career {
         taken = false;
     }
 
-    public Career(double base, double salary, int salaryGrowth, int satisfaction, int performance, Skills skills, boolean taken, int retirementAge) {
+    public Career(double base, double salary, int salaryGrowth, int satisfaction, int performance, Skills skills, boolean taken, int retirementAge, int careerID) {
         this.base = base;
         this.salary = salary;
         this.salaryGrowth = salaryGrowth;
@@ -30,6 +31,7 @@ public abstract class Career {
         this.skills = skills;
         this.taken = taken;
         this.retirementAge = retirementAge;
+        this.careerID = careerID;
     }
 
     public void update(Human human) {
@@ -120,6 +122,14 @@ public abstract class Career {
 
     public void setRetirementAge(int retirementAge) {
         this.retirementAge = retirementAge;
+    }
+
+    public int getCareerID() {
+        return careerID;
+    }
+
+    public void setCareerID(int careerID) {
+        this.careerID = careerID;
     }
 
     public void printInfo() {
