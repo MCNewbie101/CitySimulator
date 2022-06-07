@@ -14,6 +14,7 @@ public class World {
 
     private ArrayList<House> houses;
     private ArrayList<Human> humans;
+    private ArrayList<Human> bin;
     private ArrayList<Human> tracked;
     private ArrayList<Career> jobs;
 
@@ -31,6 +32,7 @@ public class World {
         for (int i = 0; i < population; i++) {
             humans.add(new Human(daysPerYear, this));
         }
+        bin = new ArrayList<>();
         tracked = new ArrayList<>();
         jobs = new ArrayList<>();
         int jobN = (int) (Math.random() * population);
@@ -54,6 +56,10 @@ public class World {
         for (Human human : humans) {
             human.update(daysPerYear, skillIncreaseBalancing, this);
         }
+        for (Human human : bin) {
+            humans.remove(human);
+        }
+        bin = new ArrayList<>();
         double gen = humans.size() * 1.0 / houses.size();
         if (humans.size() * 1.0 / houses.size() >= 2.9) {
             gen = 2.9;
@@ -128,6 +134,14 @@ public class World {
 
     public ArrayList<Human> getTracked() {
         return tracked;
+    }
+
+    public ArrayList<Human> getBin() {
+        return bin;
+    }
+
+    public void setBin(ArrayList<Human> bin) {
+        this.bin = bin;
     }
 
     public void setTracked(ArrayList<Human> tracked) {

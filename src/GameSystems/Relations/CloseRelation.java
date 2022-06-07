@@ -13,8 +13,8 @@ public abstract class CloseRelation{
         this.person = person;
         this.self = self;
         closeness = (int) (Math.random() * 10);
-        abusivenessTo = (int) (Math.random() * person.getAttributes().getPersonality().getAggressiveness());
-        abusivenessFrom = (int) (Math.random() * person.getAttributes().getPersonality().getAggressiveness());
+        abusivenessTo = (int) (Math.random() * person.getAttributes().getPersonality().getAggressiveness() * 130 / 100 - 30);
+        abusivenessFrom = (int) (Math.random() * person.getAttributes().getPersonality().getAggressiveness() * 130 / 100 - 30);
         self.getAttributes().getPersonality().compatibility(person.getAttributes().getPersonality());
     }
 

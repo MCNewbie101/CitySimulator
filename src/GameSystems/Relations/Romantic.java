@@ -30,14 +30,20 @@ public class Romantic extends CloseRelation {
 //    }
 
     public void update(int daysPerYear) {
-        int newCloseness = (int) ((-getAbusivenessFrom() * Math.random() + Math.random() * 10 - 5) / daysPerYear);
+        int newCloseness = (int) ((-getAbusivenessFrom() * Math.random() / 5 + Math.random() * 30 - 10 + Math.random() * getSelf().getAttributes().getPersonality().compatibility(getPerson().getAttributes().getPersonality()) / 5) / daysPerYear);
         if (newCloseness < -100) {
             newCloseness = -100;
+        }
+        if (newCloseness > 100) {
+            newCloseness = 100;
         }
         if (getCloseness() < 50) {
             if (Math.random() * 100 * (getSelf().getRelations().getDependentRelations().size() + 1) - 70 < getSelf().getAttributes().getHappiness() * (-getCloseness())) {
                 RandomEvents.breakup(this);
             }
+        }
+        if (getAbusivenessFrom() > 50) {
+            getSelf().getAttributes().changeTrauma((int) (Math.random() * (getAbusivenessFrom() - 50) / 5 / daysPerYear));
         }
         setCloseness(newCloseness);
         yearsTogether.update(daysPerYear);

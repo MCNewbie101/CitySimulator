@@ -11,14 +11,14 @@ public class Caretaker extends Familial {
         super(self, person, closeness, abusivenessTo, abusivenessFrom);
     }
 
-    public void update(Human self, int daysPerYear) {
-        if (self.getAge().getYears() >= 18) {
-            self.getRelations().getCaretakerRelations().remove(this);
-            self.getRelations().getFamilyRelations().add(new Familial(self, getPerson(), getCloseness(), getAbusivenessTo(), getAbusivenessFrom()));
+    public void update(int daysPerYear) {
+        if (getSelf().getAge().getYears() >= 18) {
+            getSelf().getRelations().getCaretakerRelations().remove(this);
+            getSelf().getRelations().getFamilyRelations().add(new Familial(getSelf(), getPerson(), getCloseness(), getAbusivenessTo(), getAbusivenessFrom()));
             return;
         }
         int newCloseness = (int) ((-(getAbusivenessFrom() + getAbusivenessTo()) / 2 * Math.random() + Math.random() * 10 - 5) / daysPerYear);
         setCloseness(newCloseness);
-        getPerson().getRelations().getCaretakerRelations().get(getPerson().getRelations().getCaretakers().indexOf(self)).setCloseness(newCloseness);
+        getPerson().getRelations().getCaretakerRelations().get(getPerson().getRelations().getCaretakers().indexOf(getSelf())).setCloseness(newCloseness);
     }
 }

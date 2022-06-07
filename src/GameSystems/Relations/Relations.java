@@ -52,17 +52,17 @@ public class Relations {
         }
         if (!caretakers.isEmpty()) {
             for (Caretaker caretaker : caretakers) {
-                caretaker.update(self, daysPerYear);
+                caretaker.update(daysPerYear);
             }
         }
         if (!family.isEmpty()) {
             for (Familial familial : family) {
-                familial.update(self, daysPerYear);
+                familial.update(daysPerYear);
             }
         }
         if (!friends.isEmpty()) {
             for (Platonic platonic : friends) {
-                platonic.update(self, daysPerYear);
+                platonic.update(daysPerYear);
             }
         }
     }

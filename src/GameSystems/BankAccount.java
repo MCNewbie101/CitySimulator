@@ -15,7 +15,7 @@ public class BankAccount {
         deposit = 0;
     }
 
-    public BankAccount(int deposit) {
+    public BankAccount(double deposit) {
         this.deposit = deposit;
     }
 
@@ -27,35 +27,35 @@ public class BankAccount {
         } else if (retired != null) {
             deposit += retired.getPension();
         }
-        if (earning > 1000000 / daysPerYear) {
-            deposit += (earning - 1000000 / daysPerYear) * (100 - INCOME_TAX[5]);
-            world.addBudget((earning - 1000000 / daysPerYear) * INCOME_TAX[5]);
-            earning = 1000000 / daysPerYear;
+        if (earning > 1000000.0 / daysPerYear) {
+            deposit += (earning - 1000000.0 / daysPerYear) * (100 - INCOME_TAX[5]);
+            world.addBudget((earning - 1000000.0 / daysPerYear) * INCOME_TAX[5]);
+            earning = 1000000.0 / daysPerYear;
 
         }
-        if (earning > 500000 / daysPerYear) {
-            deposit += (earning - 500000 / daysPerYear) * (100 - INCOME_TAX[4]);
-            world.addBudget((earning - 500000 / daysPerYear) * INCOME_TAX[4]);
-            earning = 500000 / daysPerYear;
+        if (earning > 500000.0 / daysPerYear) {
+            deposit += (earning - 500000.0 / daysPerYear) * (100 - INCOME_TAX[4]);
+            world.addBudget((earning - 500000.0 / daysPerYear) * INCOME_TAX[4]);
+            earning = 500000.0 / daysPerYear;
         }
-        if (earning > 250000 / daysPerYear) {
-            deposit += (earning - 250000 / daysPerYear) * (100 - INCOME_TAX[3]);
-            world.addBudget((earning - 500000 / daysPerYear) * INCOME_TAX[3]);
-            earning = 250000 / daysPerYear;
+        if (earning > 250000.0 / daysPerYear) {
+            deposit += (earning - 250000.0 / daysPerYear) * (100 - INCOME_TAX[3]);
+            world.addBudget((earning - 250000.0 / daysPerYear) * INCOME_TAX[3]);
+            earning = 250000.0 / daysPerYear;
         }
-        if (earning > 125000 / daysPerYear) {
-            deposit += (earning - 125000 / daysPerYear) * (100 - INCOME_TAX[2]);
-            world.addBudget((earning - 125000 / daysPerYear) * INCOME_TAX[2]);
-            earning = 125000 / daysPerYear;
+        if (earning > 125000.0 / daysPerYear) {
+            deposit += (earning - 125000.0 / daysPerYear) * (100 - INCOME_TAX[2]);
+            world.addBudget((earning - 125000.0 / daysPerYear) * INCOME_TAX[2]);
+            earning = 125000.0 / daysPerYear;
         }
-        if (earning > 62500 / daysPerYear) {
-            deposit += (earning - 62500 / daysPerYear) * (100 - INCOME_TAX[1]);
-            world.addBudget((earning - 62500 / daysPerYear) * INCOME_TAX[1]);
-            earning = 62500 / daysPerYear;
+        if (earning > 62500.0 / daysPerYear) {
+            deposit += (earning - 62500.0 / daysPerYear) * (100 - INCOME_TAX[1]);
+            world.addBudget((earning - 62500.0 / daysPerYear) * INCOME_TAX[1]);
+            earning = 62500.0 / daysPerYear;
         }
-        if (earning > 31250 / daysPerYear) {
-            deposit += (earning - 31250 / daysPerYear) * (100 - INCOME_TAX[0]);
-            world.addBudget((earning - 31250 / daysPerYear) * INCOME_TAX[0]);
+        if (earning > 31250.0 / daysPerYear) {
+            deposit += (earning - 31250.0 / daysPerYear) * (100 - INCOME_TAX[0]);
+            world.addBudget((earning - 31250.0 / daysPerYear) * INCOME_TAX[0]);
             earning = 31250;
         }
         deposit += earning;
