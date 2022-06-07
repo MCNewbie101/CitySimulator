@@ -12,9 +12,14 @@ public class Familial extends CloseRelation {
         super(self, person, closeness, abusivenessTo, abusivenessFrom);
     }
 
+//    public void update(Human self, int daysPerYear) {
+//        int newCloseness = (int) ((-(getAbusivenessFrom() + getAbusivenessTo()) / 2 * Math.random() + Math.random() * 10 - 5) / daysPerYear);
+//        setCloseness(newCloseness);
+//        getPerson().getRelations().getFamilyRelations().get(getPerson().getRelations().getFamily().indexOf(self)).setCloseness(newCloseness);
+//    }
+
     public void update(Human self, int daysPerYear) {
-        int newCloseness = (int) ((-(getAbusivenessFrom() + getAbusivenessTo()) / 2 * Math.random() + Math.random() * 10 - 5) / daysPerYear);
+        int newCloseness = (int) ((-getAbusivenessFrom() * Math.random() + Math.random() * 10 - 5) / daysPerYear);
         setCloseness(newCloseness);
-        getPerson().getRelations().getFamilyRelations().get(getPerson().getRelations().getFamily().indexOf(self)).setCloseness(newCloseness);
     }
 }

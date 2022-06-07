@@ -29,12 +29,14 @@ public class RandomEvents {
                 RandomEvents.friendDeath(check, human);
             } else if (check.getRelations().getDependents().contains(human)) {
                 RandomEvents.childDeath(check, human);
-            } else if (check.getRelations().getOther().contains(human)) {
-                check.getRelations().getOtherRelations().remove(check.getRelations().getOther().indexOf(human));
             }
         }
-        RandomEvents.nullifyJob(human);
-        human.getAddress().setOwnedBy(null);
+        if (human.getJob() != null) {
+            RandomEvents.nullifyJob(human);
+        }
+        if (human.getAddress() != null) {
+            human.getAddress().setOwnedBy(null);
+        }
     }
 
     private static void friendDeath(Human check, Human human) {
@@ -232,11 +234,14 @@ public class RandomEvents {
         if (human.getRelations().getLover() != null) {
             return;
         }
+        if (Math.random() * world.getDaysPerYear() > 3) {
+            return;
+        }
         for (Human human1 : world.getHumans()) {
-            if (human.getRelations().getFamily().contains(human1) || human.getRelations().getDependents().contains(human1) || human.getRelations().getCaretakers().contains(human1)) {
-                return;
+            if (human.getRelations().getFamily().contains(human1) || human.getRelations().getDependents().contains(human1) || human.getRelations().getCaretakers().contains(human1) || human == human1) {
+                continue;
             }
-            if (human1.getAge().getYears() < 15 || human1.getAge().getYears() / 2 + 7 < human.getAge().getYears() || human.getAge().getYears() / 2 + 7 < human1.getAge().getYears() || human1.getRelations().getLover() != null) {
+            if (human1.getAge().getYears() < 15 || human1.getAge().getYears() / 2 + 7 > human.getAge().getYears() || human.getAge().getYears() / 2 + 7 > human1.getAge().getYears() || human1.getRelations().getLover() != null) {
                 continue;
             }
             if (Math.random() * Math.abs(human.getAge().getYears() - human1.getAge().getYears()) > 3) {
@@ -248,7 +253,8 @@ public class RandomEvents {
                         human.getRelations().setLover(new Romantic(human, human1));
                         human1.getRelations().setLover(new Romantic(human1, human));
                         if (human.getRelations().getFriends().contains(human1)) {
-                            //TODO: Remove friendship
+                            human.getRelations().getFriendships().remove(human.getRelations().getFriends().indexOf(human1));
+                            human1.getRelations().getFriendships().remove(human1.getRelations().getFriends().indexOf(human));
                         }
                         return;
                     }
@@ -266,6 +272,7 @@ public class RandomEvents {
     }
 
     public static void marriage(Human human) {
+        //TODO: New partner becomes caretaker of dependents
         if (human.getRelations().getLover() == null || human.getAge().getYears() <= 18) {
             return;
         }
@@ -278,13 +285,50 @@ public class RandomEvents {
     }
 
     public static void childBirth(Human human, World world) {
-        if (!human.getGender().equals("female") || human.getRelations().getLover() == null) {
+        //TODO: Consider partner age, consider daysPerYear
+        if (Math.random() * world.getDaysPerYear() > 3) {
             return;
         }
-        if (!human.getRelations().getLover().isMarried()) {
+        if (!human.getGender().equals("female") || human.getRelations().getLover() == null || human.getAge().getYears() <= 18 || human.getAge().getYears() >= 40) {
             return;
         }
-        Human child = new Human(human, human.getRelations().getLover().getPerson());
-        world.getHumans().add(child);
+        if (!human.getRelations().getLover().isMarried() || human.getRelations().getLover().getPerson().getAge().getYears() <= 18 || human.getRelations().getLover().getPerson().getAge().getYears() >= 40) {
+            return;
+        }
+        for (Human dependent : human.getRelations().getDependents()) {
+            if (dependent.getAge().getYears() == 0) {
+                return;
+            }
+        }
+        double gen = 20;
+        if (human.getAge().getYears() < 25) {
+            gen =  25 - human.getAge().getYears();
+        } else if (human.getAge().getYears() > 30) {
+            gen = human.getAge().getYears() - 30;
+        }
+        if (human.getRelations().getLover().getPerson().getAge().getYears() < 25) {
+            gen -= 25 - human.getRelations().getLover().getPerson().getAge().getYears();
+        } else if (human.getRelations().getLover().getPerson().getAge().getYears() > 30) {
+            gen -= human.getRelations().getLover().getPerson().getAge().getYears() - 30;
+        }
+        gen /= 10;
+        gen *= human.getBankAccount().getDeposit() / 100000;
+        gen *= human.getRelations().getLover().getCloseness() / 100.0;
+        if (!human.getRelations().getDependentRelations().isEmpty()) {
+            gen /= human.getRelations().getDependentRelations().size();
+        }
+        if (gen > Math.random()) {
+            Human child = new Human(human, human.getRelations().getLover().getPerson());
+            world.getHumans().add(child);
+        }
+    }
+
+    public static void breakup(Romantic romantic) {
+        if (romantic.isMarried()) {
+            //TODO: split the children
+            for (Human dependent : romantic.getSelf().getRelations().getDependents()) {
+
+            }
+        }
     }
 }

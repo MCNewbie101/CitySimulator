@@ -1,11 +1,11 @@
 package GameSystems.Relations;
 
 import Actors.Human;
+import Events.RandomEvents;
 import GameSystems.Age;
 
 public class Romantic extends CloseRelation {
     private boolean married;
-    private int romance;
     private Age yearsTogether;
 
     public Romantic(Human self, Human person) {
@@ -13,17 +13,33 @@ public class Romantic extends CloseRelation {
         yearsTogether = new Age();
     }
 
-    public Romantic(Human self, Human person, boolean married, int romance, Age yearsTogether) {
+    public Romantic(Human self, Human person, boolean married, Age yearsTogether) {
         super(self, person);
         this.married = married;
-        this.romance = romance;
         this.yearsTogether = yearsTogether;
     }
 
+//    public void update(int daysPerYear) {
+//        int newCloseness = (int) ((-(getAbusivenessFrom() + getAbusivenessTo()) / 2 * Math.random() + Math.random() * 10 - 5) / daysPerYear);
+//        if (newCloseness < 0) {
+//            newCloseness = 0;
+//        }
+//        setCloseness(newCloseness);
+//        getPerson().getRelations().getLover().setCloseness(newCloseness);
+//        yearsTogether.update(daysPerYear);
+//    }
+
     public void update(int daysPerYear) {
-        int newCloseness = (int) ((-(getAbusivenessFrom() + getAbusivenessTo()) / 2 * Math.random() + Math.random() * 10 - 5) / daysPerYear);
+        int newCloseness = (int) ((-getAbusivenessFrom() * Math.random() + Math.random() * 10 - 5) / daysPerYear);
+        if (newCloseness < -100) {
+            newCloseness = -100;
+        }
+        if (getCloseness() < 50) {
+            if (Math.random() * 100 * (getSelf().getRelations().getDependentRelations().size() + 1) - 70 < getSelf().getAttributes().getHappiness() * (-getCloseness())) {
+                RandomEvents.breakup(this);
+            }
+        }
         setCloseness(newCloseness);
-        getPerson().getRelations().getLover().setCloseness(newCloseness);
         yearsTogether.update(daysPerYear);
     }
 
@@ -33,14 +49,6 @@ public class Romantic extends CloseRelation {
 
     public void setMarried(boolean married) {
         this.married = married;
-    }
-
-    public int getRomance() {
-        return romance;
-    }
-
-    public void setRomance(int romance) {
-        this.romance = romance;
     }
 
     public Age getYearsTogether() {

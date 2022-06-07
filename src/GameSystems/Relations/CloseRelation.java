@@ -2,21 +2,48 @@ package GameSystems.Relations;
 
 import Actors.Human;
 
-public abstract class CloseRelation extends Relation {
+public abstract class CloseRelation{
+    private Human self;
+    private int closeness;
+    private Human person;
     private int abusivenessTo;
     private int abusivenessFrom;
 
     public CloseRelation(Human self, Human person) {
-        super(self, person);
+        this.person = person;
+        this.self = self;
+        closeness = (int) (Math.random() * 10);
         abusivenessTo = (int) (Math.random() * person.getAttributes().getPersonality().getAggressiveness());
         abusivenessFrom = (int) (Math.random() * person.getAttributes().getPersonality().getAggressiveness());
         self.getAttributes().getPersonality().compatibility(person.getAttributes().getPersonality());
     }
 
     public CloseRelation(Human self, Human person, int closeness, int abusivenessTo, int abusivenessFrom) {
-        super(self, person, closeness);
+        this.self = self;
+        this.person = person;
+        this.closeness = closeness;
         this.abusivenessTo = abusivenessTo;
         this.abusivenessFrom = abusivenessFrom;
+    }
+
+    public void changeCloseness(int change) {
+        closeness += change;
+    }
+
+    public int getCloseness() {
+        return closeness;
+    }
+
+    public void setCloseness(int closeness) {
+        this.closeness = closeness;
+    }
+
+    public Human getPerson() {
+        return person;
+    }
+
+    public void setPerson(Human person) {
+        this.person = person;
     }
 
     public int getAbusivenessTo() {
@@ -33,5 +60,13 @@ public abstract class CloseRelation extends Relation {
 
     public void setAbusivenessFrom(int abusivenessFrom) {
         this.abusivenessFrom = abusivenessFrom;
+    }
+
+    public Human getSelf() {
+        return self;
+    }
+
+    public void setSelf(Human self) {
+        this.self = self;
     }
 }

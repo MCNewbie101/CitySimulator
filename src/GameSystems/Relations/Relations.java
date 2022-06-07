@@ -10,7 +10,6 @@ public class Relations {
     private ArrayList<Dependent> dependents;
     private ArrayList<Familial> family;
     private ArrayList<Platonic> friends;
-    private ArrayList<Relation> other;
 
     public Relations() {
         lover = null;
@@ -18,7 +17,6 @@ public class Relations {
         dependents = new ArrayList<>();
         family = new ArrayList<>();
         friends = new ArrayList<>();
-        other = new ArrayList<>();
     }
 
     public Relations(Human self, Human parent1, Human parent2) {
@@ -45,7 +43,6 @@ public class Relations {
             }
         }
         friends = new ArrayList<>();
-        other = new ArrayList<>();
         lover = null;
     }
 
@@ -132,22 +129,6 @@ public class Relations {
 
     public void setFriends(ArrayList<Platonic> friends) {
         this.friends = friends;
-    }
-
-    public ArrayList<Relation> getOtherRelations() {
-        return other;
-    }
-
-    public ArrayList<Human> getOther() {
-        ArrayList<Human> humans = new ArrayList<>();
-        for (Relation relation : other) {
-            humans.add(relation.getPerson());
-        }
-        return humans;
-    }
-
-    public void setOther(ArrayList<Relation> other) {
-        this.other = other;
     }
 
     public Romantic getLover() {

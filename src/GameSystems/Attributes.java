@@ -49,7 +49,6 @@ public class Attributes {
         happiness += (Math.random() - Math.random()) * 30;
         happiness += Math.random() * (70 - health);
         if (human.getRelations().getLover() != null) {
-            happiness += human.getRelations().getLover().getRomance() * human.getRelations().getLover().getCloseness() / 50.0 / daysPerYear;
             happiness -= human.getRelations().getLover().getAbusivenessFrom() * human.getRelations().getLover().getCloseness() / 5.0 / daysPerYear;
         }
         for (Familial relation : human.getRelations().getFamilyRelations()) {

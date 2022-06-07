@@ -176,8 +176,7 @@ public class Human {
             }
         } else {
             if (gender.equals("female")) {
-
-                int gen = (int) (Math.random() * 100);
+                RandomEvents.childBirth(this, world);
             }
         }
         if (bankAccount != null) {

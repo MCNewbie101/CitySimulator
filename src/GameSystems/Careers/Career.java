@@ -42,6 +42,7 @@ public abstract class Career {
         if (performance < -10) {
             if (-Math.random() * 100 > performance) {
                 RandomEvents.fired(human);
+                return;
             }
         }
         if (performance > 0) {

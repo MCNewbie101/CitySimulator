@@ -104,6 +104,9 @@ public class Personality {
             sum -= (personality.getAggressiveness() + this.aggressiveness) - 100;
         }
         sum -= Math.abs(this.openness - personality.getOpenness());
+        if (sum < 0) {
+            sum = 0;
+        }
         return sum;
     }
 

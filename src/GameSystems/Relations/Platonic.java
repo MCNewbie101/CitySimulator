@@ -12,9 +12,15 @@ public class Platonic extends CloseRelation {
         super(self, person, closeness, abusivenessTo, abusivenessFrom);
     }
 
+//    public void update(Human self, int daysPerYear) {
+//        int newCloseness = (int) ((-(getAbusivenessFrom() + getAbusivenessTo()) / 2 * Math.random() + Math.random() * 10 - 5) / daysPerYear);
+//        setCloseness(newCloseness);
+//        getPerson().getRelations().getFriendships().get(getPerson().getRelations().getFriends().indexOf(self)).setCloseness(newCloseness);
+//    }
+
     public void update(Human self, int daysPerYear) {
-        int newCloseness = (int) ((-(getAbusivenessFrom() + getAbusivenessTo()) / 2 * Math.random() + Math.random() * 10 - 5) / daysPerYear);
+        int newCloseness = (int) ((-getAbusivenessFrom() + getAbusivenessTo() * Math.random() + Math.random() * 10 - 5) / daysPerYear);
         setCloseness(newCloseness);
-        getPerson().getRelations().getFriendships().get(getPerson().getRelations().getFriends().indexOf(self)).setCloseness(newCloseness);
+        // TODO: Unfriend if closeness too low
     }
 }
