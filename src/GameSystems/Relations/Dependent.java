@@ -11,16 +11,13 @@ public class Dependent extends Familial{
         super(self, person, closeness, abusivenessTo, abusivenessFrom);
     }
 
-    public void update(Human human) {
-        for (Caretaker caretaker : getPerson().getRelations().getCaretakerRelations()) {
-            if (caretaker.getPerson() == human) {
-                setCloseness(caretaker.getCloseness());
-                return;
-            }
-        }
+    public void update(int daysPerYear) {
         if (getPerson().getAge().getYears() >= 18) {
-            human.getRelations().getDependentRelations().remove(this);
-            human.getRelations().getFamilyRelations().add(new Familial(human, getPerson(), getCloseness(), getAbusivenessTo(), getAbusivenessFrom()));
+            getSelf().getRelations().getDependentRelations().remove(this);
+            getSelf().getRelations().getFamilyRelations().add(new Familial(getSelf(), getPerson(), getCloseness(), getAbusivenessTo(), getAbusivenessFrom()));
+            return;
         }
+        int newCloseness = (int) ((-getAbusivenessFrom() * Math.random() + Math.random() * 10 - 5) / daysPerYear);
+        changeCloseness(newCloseness);
     }
 }

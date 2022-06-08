@@ -17,8 +17,7 @@ public class Caretaker extends Familial {
             getSelf().getRelations().getFamilyRelations().add(new Familial(getSelf(), getPerson(), getCloseness(), getAbusivenessTo(), getAbusivenessFrom()));
             return;
         }
-        int newCloseness = (int) ((-(getAbusivenessFrom() + getAbusivenessTo()) / 2 * Math.random() + Math.random() * 10 - 5) / daysPerYear);
-        setCloseness(newCloseness);
-        getPerson().getRelations().getCaretakerRelations().get(getPerson().getRelations().getCaretakers().indexOf(getSelf())).setCloseness(newCloseness);
+        int newCloseness = (int) ((-getAbusivenessFrom() * Math.random() + Math.random() * 10 - 5) / daysPerYear);
+        changeCloseness(newCloseness);
     }
 }

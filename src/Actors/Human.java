@@ -165,14 +165,14 @@ public class Human {
             }
         }
         attributes.update(this, daysPerYear);
-        relations.update(this, daysPerYear);
+        relations.update(daysPerYear);
         if (relations.getLover() == null) {
             if (age.getYears() >= 16 && s != 4) {
                 RandomEvents.findDate(this, world);
             }
         } else if (!relations.getLover().isMarried()) {
             if (age.getYears() > 18 && relations.getLover().getPerson().getAge().getYears() > 18) {
-                RandomEvents.marriage(this);
+                RandomEvents.marriage(this, daysPerYear);
             }
         } else {
             if (gender.equals("female")) {

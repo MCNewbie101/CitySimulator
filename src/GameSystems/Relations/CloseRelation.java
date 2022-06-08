@@ -28,6 +28,12 @@ public abstract class CloseRelation{
 
     public void changeCloseness(int change) {
         closeness += change;
+        if (closeness > 100) {
+            closeness = 100;
+        }
+        if (closeness < -100) {
+            closeness = -100;
+        }
     }
 
     public int getCloseness() {

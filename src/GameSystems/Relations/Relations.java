@@ -46,13 +46,20 @@ public class Relations {
         lover = null;
     }
 
-    public void update(Human self, int daysPerYear) {
+    public void update (int daysPerYear) {
         if (lover != null) {
             lover.update(daysPerYear);
         }
         if (!caretakers.isEmpty()) {
+            // TODO: Fix ConcurrentModificationError
             for (Caretaker caretaker : caretakers) {
                 caretaker.update(daysPerYear);
+            }
+        }
+        if (!dependents.isEmpty()) {
+            // TODO: Fix ConcurrentModificationError
+            for (Dependent dependent : dependents) {
+                dependent.update(daysPerYear);
             }
         }
         if (!family.isEmpty()) {

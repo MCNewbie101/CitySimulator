@@ -19,6 +19,9 @@ public class RandomEvents {
     public static void humanDeath(Human human, World world) {
         world.getBin().add(human);
         for (Human check : world.getHumans()) {
+            if (!check.isAlive()) {
+                continue;
+            }
             if (check.getRelations().getLover() != null) {
                 if (check.getRelations().getLover().getPerson().equals(human)) {
                     RandomEvents.partnerDeath(check);
@@ -82,11 +85,17 @@ public class RandomEvents {
     public static void inheritance(Human human, World world) {
         double split = 0;
         for (Dependent dependent : human.getRelations().getDependentRelations()) {
+            if (!dependent.getPerson().isAlive()) {
+                continue;
+            }
             dependent.getPerson().getAttributes().changeTrauma(dependent.getCloseness() / 5);
             split += dependent.getCloseness();
             dependent.getPerson().getAttributes().changeHappiness(-dependent.getCloseness() * 1.1);
             dependent.getPerson().getRelations().setCaretakers(new ArrayList<>());
             for (Familial familial : dependent.getPerson().getRelations().getFamilyRelations()) {
+                if (!familial.getPerson().isAlive()) {
+                    continue;
+                }
                 if (familial.getPerson().getAge().getYears() > 18 && familial.getPerson().getAddress() != null && familial.getCloseness() * (100 - familial.getPerson().getAttributes().getPersonality().getSelfishness()) * familial.getPerson().getBankAccount().getDeposit() > (Math.random() + 1) * 1000000) {
                     if (!familial.getPerson().getAddress().isUsable()) {
                         continue;
@@ -113,20 +122,29 @@ public class RandomEvents {
         if (split != 0) {
             split = human.getBankAccount().getDeposit() / split;
             for (Dependent dependent : human.getRelations().getDependentRelations()) {
+                if (!dependent.getPerson().isAlive()) {
+                    continue;
+                }
                 dependent.getPerson().getBankAccount().deposit(split * dependent.getCloseness());
             }
         } else {
             for (Familial familial : human.getRelations().getFamilyRelations()) {
+                if (!familial.getPerson().isAlive()) {
+                    continue;
+                }
                 split += familial.getCloseness();
             }
             if (split != 0) {
                 split = human.getBankAccount().getDeposit() / split;
                 for (Familial familial : human.getRelations().getFamilyRelations()) {
+                    if (!familial.getPerson().isAlive()) {
+                        continue;
+                    }
                     familial.getPerson().getBankAccount().deposit(split * familial.getCloseness());
                 }
             } else {
                 for (Platonic friend : human.getRelations().getFriendships()) {
-                    if (friend.getCloseness() > 30) {
+                    if (friend.getCloseness() > 30 && friend.getPerson().isAlive()) {
                         split += friend.getCloseness();
                     }
                 }
@@ -136,8 +154,10 @@ public class RandomEvents {
                         split = 1000;
                     }
                     for (Platonic friend : human.getRelations().getFriendships()) {
-                        friend.getPerson().getBankAccount().deposit(split * friend.getCloseness());
-                        human.getBankAccount().spend(split);
+                        if (friend.getCloseness() > 30 && friend.getPerson().isAlive()) {
+                            friend.getPerson().getBankAccount().deposit(split * friend.getCloseness());
+                            human.getBankAccount().spend(split);
+                        }
                     }
                 }
                 world.addBudget(human.getBankAccount().getDeposit());
@@ -146,6 +166,9 @@ public class RandomEvents {
     }
 
     public static void houseSearch(Human human, World world) {
+        if (!human.isAlive()) {
+            return;
+        }
         for (House house : world.getHouses()) {
             if (human.getAddress() == null && human.getBankAccount().getDeposit() > house.getValue()) {
                 house.setOwnedBy(human.getBankAccount());
@@ -180,6 +203,9 @@ public class RandomEvents {
     }
 
     public static void jobSearch(Human human, World world) {
+        if (!human.isAlive()) {
+            return;
+        }
         for (Career career : world.getJobs()) {
             if (career.isTaken()) {
                 continue;
@@ -232,7 +258,9 @@ public class RandomEvents {
     }
 
     public static void findDate(Human human, World world) {
-        // TODO: Find why sometimes two people are supposed to be dating but the relation don't show up for one of them
+        if (!human.isAlive()) {
+            return;
+        }
         if (human.getRelations().getLover() != null) {
             return;
         }
@@ -240,6 +268,9 @@ public class RandomEvents {
             return;
         }
         for (Human human1 : world.getHumans()) {
+            if (!human1.isAlive()) {
+                continue;
+            }
             if (human.getRelations().getFamily().contains(human1) || human.getRelations().getDependents().contains(human1) || human.getRelations().getCaretakers().contains(human1) || human == human1) {
                 continue;
             }
@@ -274,8 +305,14 @@ public class RandomEvents {
         return false;
     }
 
-    public static void marriage(Human human) {
+    public static void marriage(Human human, int daysPerYear) {
+        if (Math.random() * daysPerYear > 3) {
+            return;
+        }
         if (human.getRelations().getLover() == null || human.getAge().getYears() <= 18) {
+            return;
+        }
+        if (!human.isAlive() || !human.getRelations().getLover().getPerson().isAlive()) {
             return;
         }
         if (human.getRelations().getLover().getCloseness() > Math.random() * 50 + 50 && human.getRelations().getLover().getPerson().getAge().getYears() > 18) {
@@ -310,6 +347,9 @@ public class RandomEvents {
 
     private static void marriageAddDependents(Human human, Human human1) {
         for (Human dependent : human1.getRelations().getDependents()) {
+            if (!dependent.isAlive()) {
+                continue;
+            }
             if (dependent.getRelations().getFriends().contains(human)) {
                 Platonic dSide = dependent.getRelations().getFriendships().get(dependent.getRelations().getFriends().indexOf(human));
                 dependent.getRelations().getCaretakerRelations().add(new Caretaker(dependent, human, dSide.getCloseness(), dSide.getAbusivenessTo(), dSide.getAbusivenessFrom()));
@@ -325,6 +365,9 @@ public class RandomEvents {
     }
 
     public static void childBirth(Human human, World world) {
+        if (!human.isAlive() || ! human.getRelations().getLover().getPerson().isAlive()) {
+            return;
+        }
         if (Math.random() * world.getDaysPerYear() > 3) {
             return;
         }
@@ -339,7 +382,7 @@ public class RandomEvents {
                 return;
             }
         }
-        double gen = 20;
+        double gen = 10;
         if (human.getAge().getYears() < 25) {
             gen =  25 - human.getAge().getYears();
         } else if (human.getAge().getYears() > 30) {
@@ -350,6 +393,9 @@ public class RandomEvents {
         } else if (human.getRelations().getLover().getPerson().getAge().getYears() > 30) {
             gen -= human.getRelations().getLover().getPerson().getAge().getYears() - 30;
         }
+        if (gen <= 0.001) {
+            gen = 0.001;
+        }
         gen /= 10;
         gen *= human.getBankAccount().getDeposit() / 100000;
         gen *= human.getRelations().getLover().getCloseness() / 100.0;
@@ -358,11 +404,16 @@ public class RandomEvents {
         }
         if (gen > Math.random()) {
             Human child = new Human(human, human.getRelations().getLover().getPerson());
-            world.getHumans().add(child);
+            human.getRelations().getDependentRelations().add(new Dependent(human, child));
+            human.getRelations().getLover().getPerson().getRelations().getDependentRelations().add(new Dependent(human.getRelations().getLover().getPerson(), child));
+            world.getToAdd().add(child);
         }
     }
 
     public static void breakup(Romantic romantic) {
+        if (!romantic.getSelf().isAlive() || !romantic.getPerson().isAlive()) {
+            return;
+        }
         if (romantic.isMarried()) {
             if (romantic.getSelf().getAddress() != null) {
                 romantic.getSelf().getBankAccount().deposit(romantic.getSelf().getAddress().getValue());
