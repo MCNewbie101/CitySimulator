@@ -8,7 +8,13 @@ public class Education{
     private final Skills skillIncrease = new Skills(new Creativity(0, 10, 10, 70), new Mental(0, 10, 10, 70, 50), new Physical(0, 10, 10, 10, 10), new Social(0, 30, 50, 10));
 
     public Education(Attributes attributes) {
-        grade = (int) (Math.random() * attributes.getHappiness() * attributes.getHealth());
+        grade = (int) (Math.random() * attributes.getHappiness() * attributes.getHealth() / 100);
+        if (grade > 100) {
+            grade = 100;
+        }
+        if (grade < 0) {
+            grade = 0;
+        }
         gradeLevel = 0;
     }
 
@@ -17,7 +23,7 @@ public class Education{
         this.gradeLevel = gradeLevel;
     }
 
-    public void update(Skills skills, Attributes attributes, int skillIncreaseBalancing, int daysPerYear) {
+    public void update(Skills skills, Attributes attributes, int skillIncreaseBalancing, int jobSkillIncreaseBalancing, int daysPerYear) {
         grade += skills.getCreativity().getArt() / 50;
         grade += skills.getCreativity().getMusical() / 50;
         grade += skills.getCreativity().getWriting() / 10;
@@ -34,7 +40,7 @@ public class Education{
         int temp = (int) (Math.random() * attributes.getHappiness() + Math.random() * attributes.getHealth());
         temp /= 300;
         grade += temp;
-        skills.update(this, skillIncreaseBalancing, daysPerYear);
+        skills.update(this, skillIncreaseBalancing, jobSkillIncreaseBalancing, daysPerYear);
     }
 
     public int getGrade() {

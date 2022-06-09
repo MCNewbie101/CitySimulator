@@ -11,6 +11,7 @@ public class World {
     private int daysPerYear;
     private int secondsPerDay;
     private int skillIncreaseBalancing;
+    private int jobSkillIncreaseBalancing;
 
     private ArrayList<House> houses;
     private ArrayList<Human> humans;
@@ -31,7 +32,7 @@ public class World {
         }
         humans = new ArrayList<>();
         for (int i = 0; i < population; i++) {
-            humans.add(new Human(daysPerYear, this));
+            humans.add(new Human(this));
         }
         bin = new ArrayList<>();
         toAdd = new ArrayList<>();
@@ -44,7 +45,8 @@ public class World {
         for (int i = 0; i < jobN; i++) {
             RandomEvents.careerOption(this);
         }
-        skillIncreaseBalancing = 5;
+        skillIncreaseBalancing = 100;
+        jobSkillIncreaseBalancing = 10;
     }
 
     public void updateController() {
@@ -56,14 +58,12 @@ public class World {
             house.update(daysPerYear);
         }
         for (Human human : humans) {
-            human.update(daysPerYear, skillIncreaseBalancing, this);
+            human.update(this);
         }
         for (Human human : bin) {
             humans.remove(human);
         }
-        for (Human human : toAdd) {
-            humans.add(human);
-        }
+        humans.addAll(toAdd);
         bin = new ArrayList<>();
         double gen = humans.size() * 1.0 / houses.size();
         if (humans.size() * 1.0 / houses.size() >= 2.9) {
@@ -119,6 +119,14 @@ public class World {
 
     public void setSkillIncreaseBalancing(int skillIncreaseBalancing) {
         this.skillIncreaseBalancing = skillIncreaseBalancing;
+    }
+
+    public int getJobSkillIncreaseBalancing() {
+        return jobSkillIncreaseBalancing;
+    }
+
+    public void setJobSkillIncreaseBalancing(int jobSkillIncreaseBalancing) {
+        this.jobSkillIncreaseBalancing = jobSkillIncreaseBalancing;
     }
 
     public ArrayList<House> getHouses() {

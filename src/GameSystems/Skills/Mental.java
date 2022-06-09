@@ -36,11 +36,11 @@ public class Mental {
         this.chemistry += Math.random() * potential / skillIncreaseBalancing / daysPerYear;
     }
 
-    public void update(Mental skills, int skillIncreaseBalancing, int daysPerYear) {
-        this.engineering += skills.getEngineering() * potential / skillIncreaseBalancing / daysPerYear;
-        this.programming += skills.getProgramming() * potential / skillIncreaseBalancing / daysPerYear;
-        this.math += skills.getMath() * potential / skillIncreaseBalancing / daysPerYear;
-        this.chemistry += skills.getChemistry() * potential / skillIncreaseBalancing / daysPerYear;
+    public void update(Mental skills, int skillIncreaseBalancing, int jobSkillIncreaseBalancing, int daysPerYear) {
+        this.engineering += skills.getEngineering() * potential / skillIncreaseBalancing / jobSkillIncreaseBalancing / daysPerYear;
+        this.programming += skills.getProgramming() * potential / skillIncreaseBalancing / jobSkillIncreaseBalancing / daysPerYear;
+        this.math += skills.getMath() * potential / skillIncreaseBalancing / jobSkillIncreaseBalancing / daysPerYear;
+        this.chemistry += skills.getChemistry() * potential / skillIncreaseBalancing / jobSkillIncreaseBalancing / daysPerYear;
     }
 
     public int checkSkill(Mental mental) {

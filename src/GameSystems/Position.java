@@ -5,6 +5,7 @@ public class Position {
     private int y;
 
     //TODO: GUI stuff
+    //TODO: Earthquakes affect houses at certain positions, illnesses spread through ppl at same positions, etc
     public Position() {
 
     }

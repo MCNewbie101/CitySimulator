@@ -33,10 +33,10 @@ public class Creativity {
         this.writing += Math.random() * potential / skillIncreaseBalancing / daysPerYear;
     }
 
-    public void update(Creativity creativity, int skillIncreaseBalancing, int daysPerYear) {
-        this.musical += creativity.getMusical() * potential / skillIncreaseBalancing / daysPerYear;
-        this.art += creativity.getArt() * potential / skillIncreaseBalancing / daysPerYear;
-        this.writing += creativity.getWriting() * potential / skillIncreaseBalancing / daysPerYear;
+    public void update(Creativity creativity, int skillIncreaseBalancing, int daysPerYear, int jobSkillIncreaseBlancing) {
+        this.musical += creativity.getMusical() * potential / skillIncreaseBalancing / jobSkillIncreaseBlancing / daysPerYear;
+        this.art += creativity.getArt() * potential / skillIncreaseBalancing / jobSkillIncreaseBlancing / daysPerYear;
+        this.writing += creativity.getWriting() * potential / skillIncreaseBalancing / jobSkillIncreaseBlancing / daysPerYear;
     }
 
     public int checkSkill(Creativity creativity) {

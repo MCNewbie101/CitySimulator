@@ -211,7 +211,7 @@ public class RandomEvents {
                 continue;
             }
             if (human.getAge().getYears() < career.getRetirementAge()) {
-                if (career.getSkills().checkSkills(human.getSkills()) > Math.random() * 50 - 25) {
+                if (career.getSkills().checkSkills(human.getSkills()) > Math.random() * 100) {
                     if (human.getEducation().getGrade() > Math.random() * career.getSalary() / 300) {
                         career.setTaken(true);
                         human.setJob(career);

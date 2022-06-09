@@ -29,14 +29,17 @@ public class Human {
     private int s;
     private boolean isAlive;
 
-    public Human(int daysPerYear, World world) {
-        age = new Age((int) (Math.random() * 30) + 18, (int) (Math.random() * daysPerYear));
+    public Human(World world) {
+        age = new Age((int) (Math.random() * 30) + 18, (int) (Math.random() * world.getDaysPerYear()));
         if (Math.random() * 2 < 1) {
             gender = "female";
         } else {
             gender = "male";
         }
         skills = new Skills();
+        for (int i = 0; i < age.getYears(); i++) {
+            skills.update(world.getSkillIncreaseBalancing(), world.getDaysPerYear());
+        }
         int gen = (int) (Math.random() * 1000000);
         while (gen > 10000) {
             if (Math.random() * 10 < 9) {
@@ -107,7 +110,7 @@ public class Human {
         isAlive = true;
     }
 
-    public void update(int daysPerYear, int skillIncreaseBalancing, World world) {
+    public void update(World world) {
         if (!isAlive) {
             if (bankAccount != null) {
                 if (!relations.getFamily().isEmpty()) {
@@ -120,11 +123,16 @@ public class Human {
             }
             RandomEvents.humanDeath(this, world);
         }
-        age.update(daysPerYear);
+        age.update(world.getDaysPerYear());
         if (age.getYears() < 18 && relations.getCaretakers().isEmpty()) {
-            attributes.isOrphan(this, daysPerYear);
+            attributes.isOrphan(this, world.getDaysPerYear());
         }
-        skills.update(job, skillIncreaseBalancing, daysPerYear);
+        skills.update(world.getSkillIncreaseBalancing(), world.getDaysPerYear());
+        if (age.getYears() >= 18) {
+            skills.update(job, world.getSkillIncreaseBalancing(), world.getJobSkillIncreaseBalancing(), world.getDaysPerYear());
+        } else {
+            skills.update(education, world.getSkillIncreaseBalancing(), world.getJobSkillIncreaseBalancing(), world.getDaysPerYear());
+        }
         if (job != null) {
             job.update(this);
         } else if (age.getYears() >= 18) {
@@ -133,7 +141,7 @@ public class Human {
         if (age.getYears() == 5) {
             education = new Education(attributes);
         } else if (age.getYears() > 5 && age.getYears() <= 18) {
-            education.update(skills, attributes, skillIncreaseBalancing, daysPerYear);
+            education.update(skills, attributes, world.getSkillIncreaseBalancing(), world.getJobSkillIncreaseBalancing(), world.getDaysPerYear());
         }
         if (address == null) {
             if (age.getYears() >= 18) {
@@ -147,7 +155,7 @@ public class Human {
                 }
             }
             if (address == null) {
-                attributes.updateHouse(this, daysPerYear);
+                attributes.updateHouse(this, world.getDaysPerYear());
             }
         } else if (!address.isUsable()) {
             if (age.getYears() >= 18) {
@@ -161,18 +169,18 @@ public class Human {
                 }
             }
             if (!address.isUsable()) {
-                attributes.updateHouse(this, daysPerYear);
+                attributes.updateHouse(this, world.getDaysPerYear());
             }
         }
-        attributes.update(this, daysPerYear);
-        relations.update(daysPerYear);
+        attributes.update(this, world.getDaysPerYear());
+        relations.update(world.getDaysPerYear());
         if (relations.getLover() == null) {
             if (age.getYears() >= 16 && s != 4) {
                 RandomEvents.findDate(this, world);
             }
         } else if (!relations.getLover().isMarried()) {
             if (age.getYears() > 18 && relations.getLover().getPerson().getAge().getYears() > 18) {
-                RandomEvents.marriage(this, daysPerYear);
+                RandomEvents.marriage(this, world.getDaysPerYear());
             }
         } else {
             if (gender.equals("female")) {
@@ -180,7 +188,7 @@ public class Human {
             }
         }
         if (bankAccount != null) {
-            bankAccount.update(job, retirement, world, address, daysPerYear);
+            bankAccount.update(job, retirement, world, address, world.getDaysPerYear());
         }
         if (age.getYears() >= 18) {
             if (bankAccount.getDeposit() < 30000) {
@@ -200,7 +208,7 @@ public class Human {
                     }
                 }
             }
-            attributes.updateMoney(this, bankAccount, daysPerYear);
+            attributes.updateMoney(this, bankAccount, world.getDaysPerYear());
         }
         if (age.getYears() >= 16 && s != 4) {
             RandomEvents.findDate(this, world);

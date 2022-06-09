@@ -51,15 +51,31 @@ public class Relations {
             lover.update(daysPerYear);
         }
         if (!caretakers.isEmpty()) {
-            // TODO: Fix ConcurrentModificationError
+            ArrayList<Caretaker> remove = new ArrayList<>();
             for (Caretaker caretaker : caretakers) {
-                caretaker.update(daysPerYear);
+                if (caretaker.getSelf().getAge().getYears() >= 18) {
+                    remove.add(caretaker);
+                    caretaker.getSelf().getRelations().getFamilyRelations().add(new Familial(caretaker.getSelf(), caretaker.getPerson(), caretaker.getCloseness(), caretaker.getAbusivenessTo(), caretaker.getAbusivenessFrom()));
+                } else {
+                    caretaker.update(daysPerYear);
+                }
+            }
+            for (Caretaker caretaker : remove) {
+                caretakers.remove(caretaker);
             }
         }
         if (!dependents.isEmpty()) {
-            // TODO: Fix ConcurrentModificationError
+            ArrayList<Dependent> remove = new ArrayList<>();
             for (Dependent dependent : dependents) {
-                dependent.update(daysPerYear);
+                if (dependent.getPerson().getAge().getYears() >= 18) {
+                    remove.add(dependent);
+                    dependent.getSelf().getRelations().getFamilyRelations().add(new Familial(dependent.getSelf(), dependent.getPerson(), dependent.getCloseness(), dependent.getAbusivenessTo(), dependent.getAbusivenessFrom()));
+                } else {
+                    dependent.update(daysPerYear);
+                }
+            }
+            for (Dependent dependent : remove) {
+                dependents.remove(dependent);
             }
         }
         if (!family.isEmpty()) {

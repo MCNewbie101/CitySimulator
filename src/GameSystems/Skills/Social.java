@@ -33,10 +33,10 @@ public class Social {
         this.acting += potential * Math.random() / skillIncreaseBalancing / daysPerYear;
     }
 
-    public void update(Social social, int skillIncreaseBalancing, int daysPerYear) {
-        this.leadership += potential * social.getLeadership() / skillIncreaseBalancing / daysPerYear;
-        this.communication += potential * social.getCommunication() / skillIncreaseBalancing / daysPerYear;
-        this.acting += potential * social.getCommunication() / skillIncreaseBalancing / daysPerYear;
+    public void update(Social social, int skillIncreaseBalancing, int jobSkillIncreaseBalancing, int daysPerYear) {
+        this.leadership += potential * social.getLeadership() / skillIncreaseBalancing / jobSkillIncreaseBalancing / daysPerYear;
+        this.communication += potential * social.getCommunication() / skillIncreaseBalancing / jobSkillIncreaseBalancing / daysPerYear;
+        this.acting += potential * social.getCommunication() / skillIncreaseBalancing / jobSkillIncreaseBalancing / daysPerYear;
     }
 
     public int checkSkill(Social social) {

@@ -30,21 +30,28 @@ public class Skills {
         social = new Social(skills1.getSocial(), skills2.getSocial());
     }
 
-    public void update(Career career, int skillIncreaseBalancing, int daysPerYear) {
+    public void update(int skillIncreaseBalancing, int daysPerYear) {
+        creativity.update(skillIncreaseBalancing, daysPerYear);
+        mental.update(skillIncreaseBalancing, daysPerYear);
+        physical.update(skillIncreaseBalancing, daysPerYear);
+        social.update(skillIncreaseBalancing, daysPerYear);
+    }
+
+    public void update(Career career, int skillIncreaseBalancing, int jobSkillIncreaseBalancing, int daysPerYear) {
         if (career != null) {
-            creativity.update(career.getSkills().getCreativity(), skillIncreaseBalancing, daysPerYear);
-            mental.update(career.getSkills().getMental(), skillIncreaseBalancing, daysPerYear);
-            physical.update(career.getSkills().getPhysical(), skillIncreaseBalancing, daysPerYear);
-            social.update(career.getSkills().getSocial(), skillIncreaseBalancing, daysPerYear);
+            creativity.update(career.getSkills().getCreativity(), skillIncreaseBalancing, jobSkillIncreaseBalancing, daysPerYear);
+            mental.update(career.getSkills().getMental(), skillIncreaseBalancing, jobSkillIncreaseBalancing, daysPerYear);
+            physical.update(career.getSkills().getPhysical(), skillIncreaseBalancing, jobSkillIncreaseBalancing, daysPerYear);
+            social.update(career.getSkills().getSocial(), skillIncreaseBalancing, jobSkillIncreaseBalancing, daysPerYear);
         }
     }
 
-    public void update(Education education, int skillIncreaseBalancing, int daysPerYear) {
+    public void update(Education education, int skillIncreaseBalancing, int jobSkillIncreaseBalancing, int daysPerYear) {
         if (education != null) {
-            creativity.update(education.getSkillIncrease().getCreativity(), skillIncreaseBalancing, daysPerYear);
-            mental.update(education.getSkillIncrease().getMental(), skillIncreaseBalancing, daysPerYear);
-            physical.update(education.getSkillIncrease().getPhysical(), skillIncreaseBalancing, daysPerYear);
-            social.update(education.getSkillIncrease().getSocial(), skillIncreaseBalancing, daysPerYear);
+            creativity.update(education.getSkillIncrease().getCreativity(), skillIncreaseBalancing, jobSkillIncreaseBalancing, daysPerYear);
+            mental.update(education.getSkillIncrease().getMental(), skillIncreaseBalancing, jobSkillIncreaseBalancing, daysPerYear);
+            physical.update(education.getSkillIncrease().getPhysical(), skillIncreaseBalancing, jobSkillIncreaseBalancing, daysPerYear);
+            social.update(education.getSkillIncrease().getSocial(), skillIncreaseBalancing, jobSkillIncreaseBalancing, daysPerYear);
         }
     }
 
