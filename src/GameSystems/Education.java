@@ -8,7 +8,7 @@ public class Education{
     private final Skills skillIncrease = new Skills(new Creativity(0, 10, 10, 70), new Mental(0, 10, 10, 70, 50), new Physical(0, 10, 10, 10, 10), new Social(0, 30, 50, 10));
 
     public Education(Attributes attributes) {
-        grade = (int) (Math.random() * attributes.getHappiness() * attributes.getHealth() / 100);
+        grade = (int) ((Math.random() * 50 - 25) + attributes.getHappiness() * attributes.getHealth() / 30);
         if (grade > 100) {
             grade = 100;
         }

@@ -420,6 +420,11 @@ public class RandomEvents {
                 romantic.getSelf().getAddress().setOwnedBy(null);
                 romantic.getSelf().setAddress(null);
                 romantic.getPerson().setAddress(null);
+                for (Dependent dependent : romantic.getSelf().getRelations().getDependentRelations()) {
+                    if (dependent.getPerson().isAlive()) {
+                        dependent.getPerson().setAddress(null);
+                    }
+                }
             }
             romantic.getPerson().setBankAccount(new BankAccount(romantic.getSelf().getBankAccount().getDeposit() / 2));
             romantic.getPerson().getBankAccount().setDeposit(romantic.getSelf().getBankAccount().getDeposit() / 2);

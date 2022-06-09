@@ -25,6 +25,8 @@ public class World {
     public World(int houses, int population) {
         daysPerYear = 1;
         secondsPerDay = 30;
+        skillIncreaseBalancing = 15;
+        jobSkillIncreaseBalancing = 10;
         cityBudget = population * 1000 + houses * 500000;
         this.houses = new ArrayList<>();
         for (int i = 0; i < houses; i++) {
@@ -45,8 +47,6 @@ public class World {
         for (int i = 0; i < jobN; i++) {
             RandomEvents.careerOption(this);
         }
-        skillIncreaseBalancing = 100;
-        jobSkillIncreaseBalancing = 10;
     }
 
     public void updateController() {

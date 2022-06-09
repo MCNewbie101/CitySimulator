@@ -122,6 +122,7 @@ public class Human {
                 }
             }
             RandomEvents.humanDeath(this, world);
+            return;
         }
         age.update(world.getDaysPerYear());
         if (age.getYears() < 18 && relations.getCaretakers().isEmpty()) {
@@ -135,7 +136,7 @@ public class Human {
         }
         if (job != null) {
             job.update(this);
-        } else if (age.getYears() >= 18) {
+        } else if (age.getYears() >= 18 && retirement == null) {
             RandomEvents.jobSearch(this, world);
         }
         if (age.getYears() == 5) {
@@ -209,6 +210,18 @@ public class Human {
                 }
             }
             attributes.updateMoney(this, bankAccount, world.getDaysPerYear());
+        } else {
+            BankAccount parentAccount = null;
+            for (Human human : relations.getCaretakers()) {
+                if (parentAccount == null) {
+                    parentAccount = human.getBankAccount();
+                } else if (human.getBankAccount().getDeposit() > parentAccount.getDeposit()) {
+                    parentAccount = human.getBankAccount();
+                }
+            }
+            if (parentAccount != null) {
+                attributes.updateMoney(this, parentAccount, world.getDaysPerYear());
+            }
         }
         if (age.getYears() >= 16 && s != 4) {
             RandomEvents.findDate(this, world);

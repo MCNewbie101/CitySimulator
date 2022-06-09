@@ -34,7 +34,8 @@ public class Physical {
         this.speed += Math.random() * potential / skillIncreaseBalancing / daysPerYear;
         this.strength += Math.random() * potential / skillIncreaseBalancing / daysPerYear;
         this.dancing += Math.random() * potential / skillIncreaseBalancing / daysPerYear;
-        this.basketball += Math.random() * basketball / skillIncreaseBalancing / daysPerYear;
+        this.basketball += Math.random() * potential / skillIncreaseBalancing / daysPerYear;
+        updateChecker();
     }
 
     public void update(Physical physical, int skillIncreaseBalancing, int jobSkillIncreaseBalancing, int daysPerYear) {
@@ -42,6 +43,22 @@ public class Physical {
         this.strength += physical.getStrength() * potential / skillIncreaseBalancing / jobSkillIncreaseBalancing / daysPerYear;
         this.dancing += physical.getDancing() * potential / skillIncreaseBalancing / jobSkillIncreaseBalancing / daysPerYear;
         this.basketball += physical.getBasketball() * potential / skillIncreaseBalancing / jobSkillIncreaseBalancing / daysPerYear;
+        updateChecker();
+    }
+
+    public void updateChecker() {
+        if (speed > 100) {
+            speed = 100;
+        }
+        if (strength > 100) {
+            strength = 100;
+        }
+        if (dancing > 100) {
+            dancing = 100;
+        }
+        if (basketball > 100) {
+            basketball = 100;
+        }
     }
 
     public int checkSkill(Physical physical) {
@@ -51,6 +68,12 @@ public class Physical {
         }
         if (physical.getStrength() != 0) {
             sum += (strength - physical.getStrength()) * physical.getStrength();
+        }
+        if (physical.getDancing() != 0) {
+            sum += (dancing - physical.getDancing()) * physical.getDancing();
+        }
+        if (physical.getBasketball() != 0) {
+            sum += (basketball - physical.getBasketball()) * physical.getBasketball();
         }
         return sum;
     }
