@@ -5,11 +5,14 @@ import Actors.Human;
 public class Familial extends CloseRelation {
     public Familial(Human self, Human person) {
         super(self, person);
-        setCloseness((int) (Math.random() * 50 + 50));
+        setCloseness((int) (Math.random() * self.getAttributes().getPersonality().compatibility(person.getAttributes().getPersonality()) + 50));
+        if (getCloseness() > 100) {
+            setCloseness(100);
+        }
     }
 
-    public Familial(Human self, Human person, int closeness, int abusivenessTo, int abusivenessFrom) {
-        super(self, person, closeness, abusivenessTo, abusivenessFrom);
+    public Familial(Human self, Human person, int closeness, int abusivenessFrom) {
+        super(self, person, closeness, abusivenessFrom);
     }
 
 //    public void update(Human self, int daysPerYear) {

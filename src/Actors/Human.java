@@ -149,8 +149,10 @@ public class Human {
                 RandomEvents.houseSearch(this, world);
             } else {
                 for (Human caretaker : relations.getCaretakers()) {
-                    if (caretaker.getAddress().isUsable()) {
-                        address = caretaker.getAddress();
+                    if (caretaker.getAddress() != null) {
+                        if (caretaker.getAddress().isUsable()) {
+                            address = caretaker.getAddress();
+                        }
                     }
                     break;
                 }
@@ -188,6 +190,7 @@ public class Human {
                 RandomEvents.childBirth(this, world);
             }
         }
+        RandomEvents.newFriend(this, world);
         if (bankAccount != null) {
             bankAccount.update(job, retirement, world, address, world.getDaysPerYear());
         }
@@ -219,7 +222,7 @@ public class Human {
                     parentAccount = human.getBankAccount();
                 }
             }
-            if (parentAccount != null) {
+            if (parentAccount == null) {
                 attributes.updateMoney(this, parentAccount, world.getDaysPerYear());
             }
         }

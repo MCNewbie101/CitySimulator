@@ -14,7 +14,6 @@ public class Age {
         this.days = days;
     }
 
-    //TODO: Something's wrong here, updating too quickly
     public void update(int daysPerYear) {
         this.days++;
         if (this.days >= daysPerYear) {

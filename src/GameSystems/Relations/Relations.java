@@ -55,7 +55,7 @@ public class Relations {
             for (Caretaker caretaker : caretakers) {
                 if (caretaker.getSelf().getAge().getYears() >= 18) {
                     remove.add(caretaker);
-                    caretaker.getSelf().getRelations().getFamilyRelations().add(new Familial(caretaker.getSelf(), caretaker.getPerson(), caretaker.getCloseness(), caretaker.getAbusivenessTo(), caretaker.getAbusivenessFrom()));
+                    caretaker.getSelf().getRelations().getFamilyRelations().add(new Familial(caretaker.getSelf(), caretaker.getPerson(), caretaker.getCloseness(), caretaker.getAbusivenessFrom()));
                 } else {
                     caretaker.update(daysPerYear);
                 }
@@ -69,7 +69,7 @@ public class Relations {
             for (Dependent dependent : dependents) {
                 if (dependent.getPerson().getAge().getYears() >= 18) {
                     remove.add(dependent);
-                    dependent.getSelf().getRelations().getFamilyRelations().add(new Familial(dependent.getSelf(), dependent.getPerson(), dependent.getCloseness(), dependent.getAbusivenessTo(), dependent.getAbusivenessFrom()));
+                    dependent.getSelf().getRelations().getFamilyRelations().add(new Familial(dependent.getSelf(), dependent.getPerson(), dependent.getCloseness(), dependent.getAbusivenessFrom()));
                 } else {
                     dependent.update(daysPerYear);
                 }
@@ -84,8 +84,12 @@ public class Relations {
             }
         }
         if (!friends.isEmpty()) {
+            ArrayList<Platonic> remove = new ArrayList<>();
             for (Platonic platonic : friends) {
-                platonic.update(daysPerYear);
+                platonic.update(remove, daysPerYear);
+            }
+            for (Platonic platonic : remove) {
+                friends.remove(platonic);
             }
         }
     }

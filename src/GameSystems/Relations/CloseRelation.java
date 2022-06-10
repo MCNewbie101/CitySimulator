@@ -6,23 +6,20 @@ public abstract class CloseRelation{
     private Human self;
     private int closeness;
     private Human person;
-    private int abusivenessTo;
     private int abusivenessFrom;
 
     public CloseRelation(Human self, Human person) {
         this.person = person;
         this.self = self;
         closeness = (int) (Math.random() * 10);
-        abusivenessTo = (int) (Math.random() * person.getAttributes().getPersonality().getAggressiveness() * 130 / 100 - 30);
         abusivenessFrom = (int) (Math.random() * person.getAttributes().getPersonality().getAggressiveness() * 130 / 100 - 30);
         self.getAttributes().getPersonality().compatibility(person.getAttributes().getPersonality());
     }
 
-    public CloseRelation(Human self, Human person, int closeness, int abusivenessTo, int abusivenessFrom) {
+    public CloseRelation(Human self, Human person, int closeness, int abusivenessFrom) {
         this.self = self;
         this.person = person;
         this.closeness = closeness;
-        this.abusivenessTo = abusivenessTo;
         this.abusivenessFrom = abusivenessFrom;
     }
 
@@ -50,14 +47,6 @@ public abstract class CloseRelation{
 
     public void setPerson(Human person) {
         this.person = person;
-    }
-
-    public int getAbusivenessTo() {
-        return abusivenessTo;
-    }
-
-    public void setAbusivenessTo(int abusivenessTo) {
-        this.abusivenessTo = abusivenessTo;
     }
 
     public int getAbusivenessFrom() {

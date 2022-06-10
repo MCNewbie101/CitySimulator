@@ -65,6 +65,7 @@ public class World {
         }
         humans.addAll(toAdd);
         bin = new ArrayList<>();
+        toAdd = new ArrayList<>();
         double gen = humans.size() * 1.0 / houses.size();
         if (humans.size() * 1.0 / houses.size() >= 2.9) {
             gen = 2.9;

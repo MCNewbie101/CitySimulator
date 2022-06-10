@@ -7,6 +7,8 @@ import GameSystems.Skills.Skills;
 public abstract class Career {
     private double base;
     private double salary;
+    //TODO: Implement this;
+    private int academicRequirement;
     private int salaryGrowth;
     private int satisfaction;
     private int performance;
@@ -75,6 +77,14 @@ public abstract class Career {
 
     public void setSalary(double salary) {
         this.salary = salary;
+    }
+
+    public int getAcademicRequirement() {
+        return academicRequirement;
+    }
+
+    public void setAcademicRequirement(int academicRequirement) {
+        this.academicRequirement = academicRequirement;
     }
 
     public int getSatisfaction() {

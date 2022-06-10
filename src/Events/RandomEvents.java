@@ -100,16 +100,16 @@ public class RandomEvents {
                     if (!familial.getPerson().getAddress().isUsable()) {
                         continue;
                     }
-                    familial.getPerson().getRelations().getDependentRelations().add(new Dependent(familial.getPerson(), dependent.getPerson(), familial.getCloseness(), familial.getAbusivenessFrom(), familial.getAbusivenessTo()));
-                    dependent.getPerson().getRelations().getCaretakerRelations().add(new Caretaker(dependent.getPerson(), familial.getPerson(), familial.getCloseness(), familial.getAbusivenessTo(), familial.getAbusivenessFrom()));
+                    familial.getPerson().getRelations().getDependentRelations().add(new Dependent(familial.getPerson(), dependent.getPerson(), familial.getCloseness(), familial.getPerson().getRelations().getDependentRelations().get(familial.getPerson().getRelations().getDependents().indexOf(dependent.getPerson())).getAbusivenessFrom()));
+                    dependent.getPerson().getRelations().getCaretakerRelations().add(new Caretaker(dependent.getPerson(), familial.getPerson(), familial.getCloseness(), familial.getAbusivenessFrom()));
                     familial.getPerson().getRelations().getFamilyRelations().remove(familial.getPerson().getRelations().getFamily().indexOf(dependent.getPerson()));
                     dependent.getPerson().getRelations().getFamilyRelations().remove(familial);
                     if (familial.getPerson().getRelations().getLover() != null) {
                         if (familial.getPerson().getRelations().getLover().isMarried()) {
                             if (dependent.getPerson().getRelations().getFamily().contains(familial.getPerson().getRelations().getLover().getPerson())) {
                                 int index = dependent.getPerson().getRelations().getFamily().indexOf(familial.getPerson().getRelations().getLover().getPerson());
-                                dependent.getPerson().getRelations().getCaretakerRelations().add(new Caretaker(dependent.getPerson(), dependent.getPerson().getRelations().getFamilyRelations().get(index).getPerson(), dependent.getPerson().getRelations().getFamilyRelations().get(index).getCloseness(), dependent.getPerson().getRelations().getFamilyRelations().get(index).getAbusivenessTo(), dependent.getPerson().getRelations().getFamilyRelations().get(index).getAbusivenessFrom()));
-                                familial.getPerson().getRelations().getLover().getPerson().getRelations().getDependentRelations().add(new Dependent(familial.getPerson().getRelations().getLover().getPerson(), dependent.getPerson(), dependent.getPerson().getRelations().getFamilyRelations().get(index).getCloseness(), dependent.getPerson().getRelations().getFamilyRelations().get(index).getAbusivenessFrom(), dependent.getPerson().getRelations().getFamilyRelations().get(index).getAbusivenessTo()));
+                                dependent.getPerson().getRelations().getCaretakerRelations().add(new Caretaker(dependent.getPerson(), dependent.getPerson().getRelations().getFamilyRelations().get(index).getPerson(), dependent.getPerson().getRelations().getFamilyRelations().get(index).getCloseness(), dependent.getPerson().getRelations().getFamilyRelations().get(index).getAbusivenessFrom()));
+                                familial.getPerson().getRelations().getLover().getPerson().getRelations().getDependentRelations().add(new Dependent(familial.getPerson().getRelations().getLover().getPerson(), dependent.getPerson(), dependent.getPerson().getRelations().getFamilyRelations().get(index).getCloseness(), familial.getPerson().getRelations().getLover().getPerson().getRelations().getFamilyRelations().get(familial.getPerson().getRelations().getLover().getPerson().getRelations().getFamily().indexOf(dependent.getPerson())).getAbusivenessFrom()));
                                 dependent.getPerson().getRelations().getFamilyRelations().remove(index);
                                 familial.getPerson().getRelations().getLover().getPerson().getRelations().getFamilyRelations().removeIf(familial1 -> familial1.getPerson() == dependent.getPerson());
                             }
@@ -211,8 +211,8 @@ public class RandomEvents {
                 continue;
             }
             if (human.getAge().getYears() < career.getRetirementAge()) {
-                if (career.getSkills().checkSkills(human.getSkills()) > Math.random() * 100) {
-                    if (human.getEducation().getGrade() > Math.random() * career.getSalary() / 300) {
+                if (career.getSkills().checkSkills(human.getSkills()) > Math.random() * 130 - 30) {
+                    if (human.getEducation().getGrade() > Math.random() * career.getAcademicRequirement()) {
                         career.setTaken(true);
                         human.setJob(career);
                         career.setSatisfaction((int) (human.getAttributes().getPersonality().getCareerPreferences()[career.getCareerID()] * 2 - 100 + Math.random() * 30 - Math.random() * 30));
@@ -339,6 +339,18 @@ public class RandomEvents {
                         }
                     }
                 }
+                ArrayList<Human> f1 = human1.getRelations().getFamily();
+                ArrayList<Human> f = human.getRelations().getFamily();
+                for (Human familial : f) {
+                    if (!f1.contains(familial)) {
+                        human1.getRelations().getFamilyRelations().add(new Familial(human1, familial));
+                    }
+                }
+                for (Human familial : f1) {
+                    if (!f.contains(familial)) {
+                        human.getRelations().getFamilyRelations().add(new Familial(human, familial));
+                    }
+                }
                 marriageAddDependents(human1, human);
                 marriageAddDependents(human, human1);
             }
@@ -352,9 +364,9 @@ public class RandomEvents {
             }
             if (dependent.getRelations().getFriends().contains(human)) {
                 Platonic dSide = dependent.getRelations().getFriendships().get(dependent.getRelations().getFriends().indexOf(human));
-                dependent.getRelations().getCaretakerRelations().add(new Caretaker(dependent, human, dSide.getCloseness(), dSide.getAbusivenessTo(), dSide.getAbusivenessFrom()));
+                dependent.getRelations().getCaretakerRelations().add(new Caretaker(dependent, human, dSide.getCloseness(),  dSide.getAbusivenessFrom()));
                 Platonic hSide = human.getRelations().getFriendships().get(human.getRelations().getFriends().indexOf(dependent));
-                human.getRelations().getDependentRelations().add(new Dependent(human, dependent, hSide.getCloseness(), hSide.getAbusivenessTo(), hSide.getAbusivenessFrom()));
+                human.getRelations().getDependentRelations().add(new Dependent(human, dependent, hSide.getCloseness(), hSide.getAbusivenessFrom()));
                 dependent.getRelations().getFriendships().remove(dSide);
                 human.getRelations().getFriendships().remove(hSide);
             } else {
@@ -430,14 +442,47 @@ public class RandomEvents {
             romantic.getPerson().getBankAccount().setDeposit(romantic.getSelf().getBankAccount().getDeposit() / 2);
         }
         romantic.getSelf().getAttributes().changeHappiness(-romantic.getCloseness() * (Math.random() / 1.5 + 0.5));
-        if (romantic.getPerson().getAttributes() == null) {
-            System.out.println("a");
-        }
-        if (romantic.getPerson().getRelations().getLover() == null) {
-            System.out.println("b");
-        }
         romantic.getPerson().getAttributes().changeHappiness(-romantic.getPerson().getRelations().getLover().getCloseness() * (Math.random() / 1.5 + 0.5));
         romantic.getSelf().getRelations().setLover(null);
         romantic.getPerson().getRelations().setLover(null);
+    }
+
+    public static void newFriend(Human human, World world) {
+        if (!human.isAlive()) {
+            return;
+        }
+        if (Math.random() * world.getDaysPerYear() > 5) {
+            return;
+        }
+        for (Human human1 : world.getHumans()) {
+            if (!human1.isAlive()) {
+                continue;
+            }
+            if (human.getRelations().getFamily().contains(human1) || human.getRelations().getDependents().contains(human1) || human.getRelations().getCaretakers().contains(human1) || human == human1) {
+                continue;
+            }
+            if (human.getRelations().getLover() != null) {
+                if (human.getRelations().getLover().getPerson() == human1) {
+                    return;
+                }
+            }
+            if (Math.random() * Math.abs(human.getAge().getYears() - human1.getAge().getYears()) > 5) {
+                continue;
+            }
+            if (Math.random() * human.getAttributes().getPersonality().compatibility(human1.getAttributes().getPersonality()) > 50) {
+                human.getRelations().getFriendships().add(new Platonic(human, human1));
+                human1.getRelations().getFriendships().add(new Platonic(human1, human));
+            }
+        }
+    }
+
+    public static void unFriend(ArrayList<Platonic> remove, Platonic platonic) {
+        if (!platonic.getSelf().isAlive() || !platonic.getPerson().isAlive()) {
+            return;
+        }
+        platonic.getSelf().getAttributes().changeHappiness(-platonic.getCloseness() * (Math.random() / 2 + 0.5));
+        platonic.getPerson().getAttributes().changeHappiness(-platonic.getCloseness() * (Math.random() / 2 + 0.5));
+        remove.add(platonic);
+        platonic.getPerson().getRelations().getFriendships().remove(platonic.getPerson().getRelations().getFriends().indexOf(platonic.getSelf()));
     }
 }

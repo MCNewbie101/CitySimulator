@@ -11,7 +11,7 @@ public class Main {
         city.setDaysPerYear(1);
         while (!inputs.equals("!")) {
             city.update();
-            city.printInfo();
+//            city.printInfo();
 //            scanner.nextLine();
         }
     }

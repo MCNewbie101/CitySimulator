@@ -7,8 +7,8 @@ public class Dependent extends Familial{
         super(self, person);
     }
 
-    public Dependent(Human self, Human person, int closeness, int abusivenessTo, int abusivenessFrom) {
-        super(self, person, closeness, abusivenessTo, abusivenessFrom);
+    public Dependent(Human self, Human person, int closeness, int abusivenessFrom) {
+        super(self, person, closeness, abusivenessFrom);
     }
 
     public void update(int daysPerYear) {

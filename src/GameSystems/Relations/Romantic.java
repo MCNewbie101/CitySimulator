@@ -11,10 +11,14 @@ public class Romantic extends CloseRelation {
     public Romantic(Human self, Human person) {
         super(self, person);
         yearsTogether = new Age();
+        setCloseness((int) (Math.random() * self.getAttributes().getPersonality().compatibility(person.getAttributes().getPersonality())));
+        if (getCloseness() > 100) {
+            setCloseness(100);
+        }
     }
 
-    public Romantic(Human self, Human person, boolean married, Age yearsTogether) {
-        super(self, person);
+    public Romantic(Human self, Human person, int closeness, int abusivenessFrom, boolean married, Age yearsTogether) {
+        super(self, person, closeness, abusivenessFrom);
         this.married = married;
         this.yearsTogether = yearsTogether;
     }
