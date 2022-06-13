@@ -120,9 +120,13 @@ public class Attributes {
         checkInBounds(human);
         trauma += 3;
     }
-    // TODO: NullPointerException for some reason?
     // TODO: Makes sure this actually make sense
     public void updateMoney(Human human, BankAccount bankAccount, int daysPerYear) {
+        if (bankAccount == null) {
+            happiness -= 50.0 / daysPerYear;
+            health -= 30.0 / daysPerYear;
+            trauma += 2;
+        }
         if (bankAccount.getDeposit() < 10000.0 / daysPerYear) {
             happiness -= 50.0 / daysPerYear;
             health -= 30.0 / daysPerYear;
