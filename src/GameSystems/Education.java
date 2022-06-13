@@ -4,7 +4,6 @@ import GameSystems.Skills.*;
 
 public class Education{
     private int grade;
-    private int gradeLevel;
     private final Skills skillIncrease = new Skills(new Creativity(0, 10, 10, 70), new Mental(0, 10, 10, 70, 50), new Physical(0, 10, 10, 10, 10), new Social(0, 30, 50, 10));
 
     public Education(Attributes attributes) {
@@ -15,32 +14,38 @@ public class Education{
         if (grade < 0) {
             grade = 0;
         }
-        gradeLevel = 0;
     }
 
-    public Education(int grade, int gradeLevel) {
+    public Education(int grade) {
         this.grade = grade;
-        this.gradeLevel = gradeLevel;
     }
 
     public void update(Skills skills, Attributes attributes, int skillIncreaseBalancing, int jobSkillIncreaseBalancing, int daysPerYear) {
-        grade += skills.getCreativity().getArt() / 50;
-        grade += skills.getCreativity().getMusical() / 50;
-        grade += skills.getCreativity().getWriting() / 10;
-        grade += skills.getMental().getEngineering() / 50;
-        grade += skills.getMental().getProgramming() / 30;
-        grade += skills.getMental().getMath() / 10;
-        grade += skills.getMental().getChemistry() / 15;
-        grade += skills.getPhysical().getSpeed() / 50;
-        grade += skills.getPhysical().getStrength() / 50;
-        grade += skills.getPhysical().getDancing() / 30;
-        grade += skills.getSocial().getLeadership() / 15;
-        grade += skills.getSocial().getCommunication() / 15;
-        grade += skills.getSocial().getActing() / 50;
-        int temp = (int) (Math.random() * attributes.getHappiness() + Math.random() * attributes.getHealth());
-        temp /= 300;
+        int temp = 0;
+        temp += skills.getCreativity().getArt() / 50;
+        temp += skills.getCreativity().getMusical() / 50;
+        temp += skills.getCreativity().getWriting() / 10;
+        temp += skills.getMental().getEngineering() / 50;
+        temp += skills.getMental().getProgramming() / 30;
+        temp += skills.getMental().getMath() / 10;
+        temp += skills.getMental().getChemistry() / 15;
+        temp += skills.getPhysical().getSpeed() / 50;
+        temp += skills.getPhysical().getStrength() / 50;
+        temp += skills.getPhysical().getDancing() / 30;
+        temp += skills.getSocial().getLeadership() / 15;
+        temp += skills.getSocial().getCommunication() / 15;
+        temp += skills.getSocial().getActing() / 50;
+        temp /= 10;
+        temp += (int) (Math.random() * attributes.getHappiness() + Math.random() * attributes.getHealth() - Math.random() * 100);
+        temp /= 100;
         grade += temp;
         skills.update(this, skillIncreaseBalancing, jobSkillIncreaseBalancing, daysPerYear);
+        if (grade > 100) {
+            grade = 100;
+        }
+        if (grade < 0) {
+            grade = 0;
+        }
     }
 
     public int getGrade() {
@@ -49,14 +54,6 @@ public class Education{
 
     public void setGrade(int grade) {
         this.grade = grade;
-    }
-
-    public int getGradeLevel() {
-        return gradeLevel;
-    }
-
-    public void setGradeLevel(int gradeLevel) {
-        this.gradeLevel = gradeLevel;
     }
 
     public Skills getSkillIncrease() {

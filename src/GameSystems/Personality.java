@@ -101,7 +101,7 @@ public class Personality {
     public int compatibility(Personality personality) {
         int sum = 100;
         if (personality.getAggressiveness() + aggressiveness > 100) {
-            sum -= (personality.getAggressiveness() + aggressiveness) - 100;
+            sum -= ((personality.getAggressiveness() + aggressiveness) - 100) / 10;
         }
         if (personality.getSelfishness() + getSelfishness() > 100) {
             sum -= (personality.aggressiveness + aggressiveness) - 100;
@@ -111,6 +111,9 @@ public class Personality {
         sum -= Math.abs(openness - personality.getOpenness());
         if (sum < 0) {
             sum = 0;
+        }
+        if (sum > 100) {
+            sum = 100;
         }
         return sum;
     }

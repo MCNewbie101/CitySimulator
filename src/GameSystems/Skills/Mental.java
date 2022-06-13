@@ -65,7 +65,7 @@ public class Mental {
         sum += (int) ((programming - mental.getProgramming()) * mental.getProgramming());
         sum += (int) ((engineering - mental.getEngineering()) * mental.getEngineering());
         sum += (int) ((math - mental.getMath()) * mental.getMath());
-        sum += (int) ((chemistry - mental.getMath()) * mental.getMath());
+        sum += (int) ((chemistry - mental.getChemistry()) * mental.getChemistry());
         return sum;
     }
 

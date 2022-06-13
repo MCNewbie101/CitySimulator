@@ -211,7 +211,7 @@ public class RandomEvents {
                 continue;
             }
             if (human.getAge().getYears() < career.getRetirementAge()) {
-                if (career.getSkills().checkSkills(human.getSkills()) > Math.random() * 130 - 30) {
+                if (human.getSkills().checkSkills(career.getSkills()) > Math.random() * 100 - 30) {
                     if (human.getEducation().getGrade() > Math.random() * career.getAcademicRequirement()) {
                         career.setTaken(true);
                         human.setJob(career);
@@ -262,6 +262,9 @@ public class RandomEvents {
             return;
         }
         if (human.getRelations().getLover() != null) {
+            return;
+        }
+        if (human.getAttributes().getHappiness() < Math.random() * 100 - 50) {
             return;
         }
         if (Math.random() * world.getDaysPerYear() > 3) {
@@ -358,6 +361,7 @@ public class RandomEvents {
     }
 
     private static void marriageAddDependents(Human human, Human human1) {
+        //TODO: Make dependents siblings
         for (Human dependent : human1.getRelations().getDependents()) {
             if (!dependent.isAlive()) {
                 continue;
@@ -377,6 +381,8 @@ public class RandomEvents {
     }
 
     public static void childBirth(Human human, World world) {
+        //TODO: Give the kid siblings
+        //TODO: Find a good number for gen
         if (!human.isAlive() || ! human.getRelations().getLover().getPerson().isAlive()) {
             return;
         }
@@ -394,11 +400,11 @@ public class RandomEvents {
                 return;
             }
         }
-        double gen = 10;
+        double gen = 10000;
         if (human.getAge().getYears() < 25) {
-            gen =  25 - human.getAge().getYears();
+            gen -=  25 - human.getAge().getYears();
         } else if (human.getAge().getYears() > 30) {
-            gen = human.getAge().getYears() - 30;
+            gen -= human.getAge().getYears() - 30;
         }
         if (human.getRelations().getLover().getPerson().getAge().getYears() < 25) {
             gen -= 25 - human.getRelations().getLover().getPerson().getAge().getYears();
@@ -408,7 +414,6 @@ public class RandomEvents {
         if (gen <= 0.001) {
             gen = 0.001;
         }
-        gen /= 10;
         gen *= human.getBankAccount().getDeposit() / 100000;
         gen *= human.getRelations().getLover().getCloseness() / 100.0;
         if (!human.getRelations().getDependentRelations().isEmpty()) {
@@ -419,6 +424,13 @@ public class RandomEvents {
             human.getRelations().getDependentRelations().add(new Dependent(human, child));
             human.getRelations().getLover().getPerson().getRelations().getDependentRelations().add(new Dependent(human.getRelations().getLover().getPerson(), child));
             world.getToAdd().add(child);
+            child.getRelations().getFamilyRelations().addAll(human.getRelations().getFamilyRelations());
+            ArrayList<Human> family = child.getRelations().getFamily();
+            for (Familial familial : human.getRelations().getLover().getPerson().getRelations().getFamilyRelations()) {
+                if (!family.contains(familial.getPerson())) {
+                    child.getRelations().getFamilyRelations().add(new Familial(child, familial.getPerson()));
+                }
+            }
         }
     }
 
@@ -435,6 +447,8 @@ public class RandomEvents {
                 for (Dependent dependent : romantic.getSelf().getRelations().getDependentRelations()) {
                     if (dependent.getPerson().isAlive()) {
                         dependent.getPerson().setAddress(null);
+                        dependent.getPerson().getAttributes().changeTrauma(5);
+                        dependent.getPerson().getAttributes().changeHappiness(-50);
                     }
                 }
             }
@@ -454,8 +468,17 @@ public class RandomEvents {
         if (Math.random() * world.getDaysPerYear() > 5) {
             return;
         }
+        if (human.getAttributes().getHappiness() < Math.random() * 100 - 50) {
+            return;
+        }
+        if (human.getRelations().getFriendships().size() / (Math.random() + 0.0001) / human.getAttributes().getPersonality().getSociability() > 30) {
+            return;
+        }
         for (Human human1 : world.getHumans()) {
             if (!human1.isAlive()) {
+                continue;
+            }
+            if (Math.random() * Math.abs(human.getAge().getYears() - human1.getAge().getYears()) > 1) {
                 continue;
             }
             if (human.getRelations().getFamily().contains(human1) || human.getRelations().getDependents().contains(human1) || human.getRelations().getCaretakers().contains(human1) || human == human1) {

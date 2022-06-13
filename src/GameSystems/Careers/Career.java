@@ -7,7 +7,6 @@ import GameSystems.Skills.Skills;
 public abstract class Career {
     private double base;
     private double salary;
-    //TODO: Implement this;
     private int academicRequirement;
     private int salaryGrowth;
     private int satisfaction;
@@ -17,9 +16,7 @@ public abstract class Career {
     private int retirementAge;
     private int careerID;
 
-    //TODO: Change satisfaction based on person
     public Career() {
-//        satisfaction = (int) (Math.random() * 100);
         performance = 0;
         taken = false;
     }

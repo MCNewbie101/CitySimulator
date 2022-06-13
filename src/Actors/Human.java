@@ -59,7 +59,6 @@ public class Human {
         retirement = null;
         attributes = new Attributes();
         education = new Education(attributes);
-        education.setGradeLevel(12);
         relations = new Relations();
         gen = (int) (Math.random() * 100);
         if (gen < 90) {
@@ -165,10 +164,12 @@ public class Human {
                 RandomEvents.houseSearch(this, world);
             } else {
                 for (Human caretaker : relations.getCaretakers()) {
-                    if (caretaker.getAddress().isUsable()) {
-                        address = caretaker.getAddress();
+                    if (caretaker.getRelations() != null) {
+                        if (caretaker.getAddress().isUsable()) {
+                            address = caretaker.getAddress();
+                        }
+                        break;
                     }
-                    break;
                 }
             }
             if (!address.isUsable()) {

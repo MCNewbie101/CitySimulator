@@ -7,6 +7,7 @@ public class Programmer extends Career{
     private final int salaryGrowth = 100;
     private final int retirementAge = 65;
     private final int careerID = 2;
+    private final int gradeRequired = 90;
 
     public Programmer() {
         super();
@@ -16,5 +17,6 @@ public class Programmer extends Career{
         setSkills(new Skills(new Creativity(0, 0, 0, 0), new Mental(0, 90, 0, 10, 0), new Physical(0, 0, 0, 0, 0), new Social(0, 3, 5, 0)));
         setRetirementAge(retirementAge);
         setCareerID(careerID);
+        setAcademicRequirement(gradeRequired);
     }
 }

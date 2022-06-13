@@ -42,11 +42,11 @@ public class Romantic extends CloseRelation {
             newCloseness = 100;
         }
         if (getCloseness() < 0 && married) {
-            if (Math.random() * 100 * (getSelf().getRelations().getDependentRelations().size() + 1) - 70 < getSelf().getAttributes().getHappiness() * (-getCloseness())) {
+            if (Math.random() * 100 * (getSelf().getRelations().getDependentRelations().size() + 1) - 70 < -getSelf().getAttributes().getHappiness() * getCloseness()) {
                 RandomEvents.breakup(this);
             }
         } else if (getCloseness() < 30 && !married) {
-            if (Math.random() * 100 - 70 < getSelf().getAttributes().getHappiness() * (-getCloseness())) {
+            if (Math.random() * 100 - 70 < -getSelf().getAttributes().getHappiness() * (getCloseness() - 30)) {
                 RandomEvents.breakup(this);
             }
         }

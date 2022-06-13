@@ -34,20 +34,23 @@ public class Attributes {
 
     public void update(Human human, int daysPerYear) {
         health += (Math.random() - Math.random()) * 5 / daysPerYear;
-        health += Math.random() * (70 - human.getAge().getYears()) / daysPerYear;
+        health += Math.random() * 0.3 * (70 - human.getAge().getYears()) / daysPerYear;
         if (happiness < 0) {
-            health -= happiness / 10 / daysPerYear;
+            health += happiness / 10 / daysPerYear;
         } else {
             health += happiness / 50 / daysPerYear;
         }
         if (health <= 0) {
             human.setAlive(false);
+            return;
         }
         if (health > 100) {
             health = 100;
         }
         happiness += (Math.random() - Math.random()) * 30;
-        happiness += Math.random() * (70 - health);
+        happiness += Math.random() * (health - 70);
+        //TODO: Add caretaker and dependent here, remove attributes updates from caretaker class
+        //TODO: Fix how abusiveness affect happiness
         if (human.getRelations().getLover() != null) {
             happiness -= human.getRelations().getLover().getAbusivenessFrom() * human.getRelations().getLover().getCloseness() / 5.0 / daysPerYear;
         }
@@ -117,7 +120,7 @@ public class Attributes {
         checkInBounds(human);
         trauma += 3;
     }
-
+    // TODO: NullPointerException for some reason?
     // TODO: Makes sure this actually make sense
     public void updateMoney(Human human, BankAccount bankAccount, int daysPerYear) {
         if (bankAccount.getDeposit() < 10000.0 / daysPerYear) {

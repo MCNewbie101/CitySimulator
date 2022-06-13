@@ -29,7 +29,7 @@ public class Familial extends CloseRelation {
         if (newCloseness > 100) {
             newCloseness = 100;
         }
-        setCloseness(newCloseness);
+        changeCloseness(newCloseness);
         if (getAbusivenessFrom() > 50) {
             getSelf().getAttributes().changeTrauma((int) (Math.random() * (getAbusivenessFrom() - 50) / 10 / daysPerYear));
         }

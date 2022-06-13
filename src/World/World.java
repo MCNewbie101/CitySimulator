@@ -26,7 +26,7 @@ public class World {
         daysPerYear = 1;
         secondsPerDay = 30;
         skillIncreaseBalancing = 15;
-        jobSkillIncreaseBalancing = 10;
+        jobSkillIncreaseBalancing = 30;
         cityBudget = population * 1000 + houses * 500000;
         this.houses = new ArrayList<>();
         for (int i = 0; i < houses; i++) {
