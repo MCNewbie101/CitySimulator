@@ -2,6 +2,7 @@ package Buildings;
 
 import GameSystems.Position;
 import GameSystems.Age;
+import World.World;
 
 public abstract class Building {
     private double value;
@@ -28,7 +29,7 @@ public abstract class Building {
         this.position = position;
     }
 
-    public void update(int daysPerYear) {
+    public void update(World world, int daysPerYear) {
         age.update(daysPerYear);
         double gen = Math.random();
         while(Math.random() * 10 < 7) {
@@ -37,6 +38,12 @@ public abstract class Building {
         value *= gen / daysPerYear + 1;
         if (Math.random() * 1000 < age.getYears()) {
             usable = false;
+        }
+        if (!usable) {
+            if (Math.random() * 1000000000 < world.getCityBudget() - value) {
+                world.citySpending(value);
+                usable = true;
+            }
         }
     }
 

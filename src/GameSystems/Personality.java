@@ -83,6 +83,16 @@ public class Personality {
         generateCareerPreferences();
     }
 
+    public Personality(int aggressiveness, int confidence, int sociability, int impulsiveness, int openness, int selfishness) {
+        this.aggressiveness = aggressiveness;
+        this.confidence = confidence;
+        this.sociability = sociability;
+        this.impulsiveness = impulsiveness;
+        this.openness = openness;
+        this.selfishness = selfishness;
+        generateCareerPreferences();
+    }
+
     public void generateCareerPreferences() {
         careerPreferences = new int[10];
         careerPreferences[0] = (int) (confidence + sociability / 2 - Math.random() * 50);

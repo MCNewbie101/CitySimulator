@@ -95,16 +95,19 @@ public class Human {
         isAlive = true;
     }
 
-    public Human(Age age, String gender, Skills skills, Career job, Education education, House address, Attributes attributes, Relations relations, BankAccount bankAccount, Retired retirement) {
+    public Human(World world, Age age, String gender, Skills skills, Education education, Attributes attributes, BankAccount bankAccount) {
         this.age = age;
         this.gender = gender;
         this.skills = skills;
-        this.job = job;
-        this.retirement = retirement;
+        for (int i = 0; i < age.getYears(); i++) {
+            skills.update(world.getSkillIncreaseBalancing(), world.getDaysPerYear());
+        }
+        this.job = null;
+        this.retirement = null;
         this.education = education;
-        this.address = address;
+        this.address = null;
         this.attributes = attributes;
-        this.relations = relations;
+        this.relations = new Relations();
         this.bankAccount = bankAccount;
         isAlive = true;
     }
@@ -238,33 +241,51 @@ public class Human {
                 if (attributes.getHealth() < 90 && bankAccount.getDeposit() > 100000) {
                     if (attributes.getHappiness() > Math.random() * 200) {
                         RandomEvents.hospital(this, bankAccount);
+                    } else {
+                        break;
                     }
                 } else if (attributes.getHealth() < 80 && bankAccount.getDeposit() > 70000) {
                     if (attributes.getHappiness() > Math.random() * 200 - 10) {
                         RandomEvents.hospital(this, bankAccount);
+                    } else {
+                        break;
                     }
                 } else if (attributes.getHealth() < 70 && bankAccount.getDeposit() > 49000) {
                     if (attributes.getHappiness() > Math.random() * 200 - 20) {
                         RandomEvents.hospital(this, bankAccount);
+                    } else {
+                        break;
                     }
                 } else if (attributes.getHealth() < 60 && bankAccount.getDeposit() > 34300) {
                     if (attributes.getHappiness() > Math.random() * 200 - 30) {
                         RandomEvents.hospital(this, bankAccount);
+                    } else {
+                        break;
                     }
                 } else if (attributes.getHealth() < 50 && bankAccount.getDeposit() > 240100) {
                     if (attributes.getHappiness() > Math.random() * 200 - 40) {
                         RandomEvents.hospital(this, bankAccount);
+                    } else {
+                        break;
                     }
                 } else if (attributes.getHealth() < 40 && bankAccount.getDeposit() > 168070) {
                     if (attributes.getHappiness() > Math.random() * 200 - 50) {
                         RandomEvents.hospital(this, bankAccount);
+                    } else {
+                        break;
                     }
                 } else if (attributes.getHealth() < 30 && bankAccount.getDeposit() > 117649) {
                     if (attributes.getHappiness() > Math.random() * 200 - 60) {
                         RandomEvents.hospital(this, bankAccount);
+                    } else {
+                        break;
                     }
-                } // TODO: add emergency hospitalization, which the city pays for
-                else {
+                } else if (attributes.getHealth() < 20) {
+                    if (Math.random() * 10 < 1) {
+                        break;
+                    }
+                    RandomEvents.hospital2(this, world);
+                } else {
                     break;
                 }
             }

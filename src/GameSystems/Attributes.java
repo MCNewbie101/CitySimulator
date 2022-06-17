@@ -32,6 +32,13 @@ public class Attributes {
         trauma = 0;
     }
 
+    public Attributes(Personality personality, double happiness, double health, int trauma) {
+        this.personality = personality;
+        this.happiness = happiness;
+        this.health = health;
+        this.trauma = trauma;
+    }
+
     public void update(Human human, int daysPerYear) {
         health += (Math.random() - Math.random()) * 5 / daysPerYear;
         health += Math.random() * 0.3 * (70 - human.getAge().getYears()) / daysPerYear;

@@ -222,8 +222,7 @@ public class RandomEvents {
         }
         for (House house : world.getHouses()) {
             if (human.getAddress() == null && human.getBankAccount().getDeposit() > house.getValue() && house.getOwnedBy() == null) {
-                house.setOwnedBy(human.getBankAccount());
-                human.getBankAccount().spend(house.getValue());
+                house.buy(human.getBankAccount());
             }
         }
     }
@@ -623,5 +622,12 @@ public class RandomEvents {
     public static void hospital(Human human, BankAccount bankAccount) {
         human.getAttributes().changeHealth(Math.random() * 10);
         bankAccount.spend(5000);
+    }
+
+    public static void hospital2(Human human, World world) {
+        if (world.getCityBudget() >= 10000) {
+            human.getAttributes().changeHealth(Math.random() * 20);
+            world.citySpending(10000);
+        }
     }
 }
