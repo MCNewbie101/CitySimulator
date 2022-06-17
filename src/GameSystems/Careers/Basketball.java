@@ -6,7 +6,7 @@ public class Basketball extends Career{
     private final int baseSalary = 5200000;
     private final int salaryGrowth = 1000000;
     private final int retirementAge = 30;
-    private final int careerID = 1;
+    private final int careerID = 3;
 
     public Basketball() {
         super();

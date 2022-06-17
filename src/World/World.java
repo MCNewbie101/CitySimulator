@@ -25,9 +25,9 @@ public class World {
     public World(int houses, int population) {
         daysPerYear = 1;
         secondsPerDay = 30;
-        skillIncreaseBalancing = 15;
-        jobSkillIncreaseBalancing = 30;
-        cityBudget = population * 1000 + houses * 500000;
+        skillIncreaseBalancing = 20;
+        jobSkillIncreaseBalancing = 100;
+        cityBudget = population * 10000 + houses * 500000;
         this.houses = new ArrayList<>();
         for (int i = 0; i < houses; i++) {
             RandomEvents.buildHouse(this);
@@ -41,8 +41,8 @@ public class World {
         tracked = new ArrayList<>();
         jobs = new ArrayList<>();
         int jobN = (int) (Math.random() * population);
-        if (jobN < population / 5) {
-            jobN = population / 5;
+        if (jobN < population / 2) {
+            jobN = population / 2;
         }
         for (int i = 0; i < jobN; i++) {
             RandomEvents.careerOption(this);
@@ -54,6 +54,7 @@ public class World {
     }
 
     public void update() {
+        RandomEvents.humanMoveIn(this);
         for (House house : houses) {
             house.update(daysPerYear);
         }
@@ -67,13 +68,14 @@ public class World {
         bin = new ArrayList<>();
         toAdd = new ArrayList<>();
         double gen = humans.size() * 1.0 / houses.size();
-        if (humans.size() * 1.0 / houses.size() >= 2.9) {
-            gen = 2.9;
-        }
-        while (Math.random() * 3 < gen) {
+        while (Math.random() * 1.5 < gen) {
+            int houseN = houses.size();
             RandomEvents.buildHouse(this);
+            if (houseN == houses.size()) {
+                return;
+            }
         }
-        while (Math.random() * 3 < humans.size() * 1.0 / jobs.size()) {
+        while (Math.random() * 1.5 < humans.size() * 1.0 / jobs.size()) {
             RandomEvents.careerOption(this);
         }
     }

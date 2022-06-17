@@ -34,7 +34,7 @@ public abstract class Career {
     }
 
     public void update(Human human) {
-        int temp = this.skills.checkSkills(human.getSkills());
+        int temp = this.skills.checkSkills(human.getSkills()) + 10;
         temp += Math.random() * human.getAttributes().getHappiness() + Math.random() * human.getAttributes().getHealth();
         temp /= 300;
         performance += temp;

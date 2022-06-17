@@ -126,6 +126,7 @@ public class Attributes {
             happiness -= 50.0 / daysPerYear;
             health -= 30.0 / daysPerYear;
             trauma += 2;
+            return;
         }
         if (bankAccount.getDeposit() < 10000.0 / daysPerYear) {
             happiness -= 50.0 / daysPerYear;

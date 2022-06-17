@@ -84,10 +84,17 @@ public class Personality {
     }
 
     public void generateCareerPreferences() {
-        careerPreferences = new int[3];
+        careerPreferences = new int[10];
         careerPreferences[0] = (int) (confidence + sociability / 2 - Math.random() * 50);
-        careerPreferences[1] = (int) (aggressiveness / 10 + Math.random() * 90);
-        careerPreferences[2] = (int) (Math.random() * 100);
+        careerPreferences[1] = (int) (Math.random() * 90 + 10);
+        careerPreferences[2] = (int) (Math.random() * 90 + 10);
+        careerPreferences[3] = (int) (aggressiveness / 10 + Math.random() * 90);
+        careerPreferences[4] = (int) (Math.random() * 70);
+        careerPreferences[5] = (int) (Math.random() * 70);
+        careerPreferences[6] = (int) (Math.random() * 90 + 10);
+        careerPreferences[7] = (int) (Math.random() * 70 + 30);
+        careerPreferences[8] = (int) (Math.random() * 80);
+        careerPreferences[9] = (int) (Math.random() * 80);
         for (int i = 0; i < careerPreferences.length; i++) {
             if (careerPreferences[i] < 0) {
                 careerPreferences[i] = 0;

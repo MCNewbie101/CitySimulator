@@ -12,9 +12,6 @@ import GameSystems.Relations.Relations;
 import GameSystems.Skills.Skills;
 import World.World;
 
-import java.util.ArrayList;
-import java.util.Objects;
-
 public class Human {
     private Age age;
     private String gender;
@@ -30,7 +27,7 @@ public class Human {
     private boolean isAlive;
 
     public Human(World world) {
-        age = new Age((int) (Math.random() * 30) + 18, (int) (Math.random() * world.getDaysPerYear()));
+        age = new Age((int) (Math.random() * 12) + 18, (int) (Math.random() * world.getDaysPerYear()));
         if (Math.random() * 2 < 1) {
             gender = "female";
         } else {
@@ -40,10 +37,10 @@ public class Human {
         for (int i = 0; i < age.getYears(); i++) {
             skills.update(world.getSkillIncreaseBalancing(), world.getDaysPerYear());
         }
-        int gen = (int) (Math.random() * 1000000);
-        while (gen > 10000) {
+        int gen = (int) (Math.random() * 3000000);
+        while (gen > 100000) {
             if (Math.random() * 10 < 9) {
-                gen *= 0.99;
+                gen *= 0.9;
             } else {
                 break;
             }
@@ -59,6 +56,9 @@ public class Human {
         retirement = null;
         attributes = new Attributes();
         education = new Education(attributes);
+        for (int i = 5; i < 18; i++) {
+            skills.update(education, world.getSkillIncreaseBalancing(), world.getJobSkillIncreaseBalancing(), world.getDaysPerYear());
+        }
         relations = new Relations();
         gen = (int) (Math.random() * 100);
         if (gen < 90) {
@@ -127,6 +127,9 @@ public class Human {
         if (age.getYears() < 18 && relations.getCaretakers().isEmpty()) {
             attributes.isOrphan(this, world.getDaysPerYear());
         }
+        if (age.getYears() == 18) {
+            address = null;
+        }
         skills.update(world.getSkillIncreaseBalancing(), world.getDaysPerYear());
         if (age.getYears() >= 18) {
             skills.update(job, world.getSkillIncreaseBalancing(), world.getJobSkillIncreaseBalancing(), world.getDaysPerYear());
@@ -164,7 +167,7 @@ public class Human {
                 RandomEvents.houseSearch(this, world);
             } else {
                 for (Human caretaker : relations.getCaretakers()) {
-                    if (caretaker.getRelations() != null) {
+                    if (caretaker.getAddress() != null) {
                         if (caretaker.getAddress().isUsable()) {
                             address = caretaker.getAddress();
                         }
@@ -224,11 +227,47 @@ public class Human {
                 }
             }
             if (parentAccount == null) {
-                attributes.updateMoney(this, parentAccount, world.getDaysPerYear());
+                attributes.updateMoney(this, null, world.getDaysPerYear());
             }
         }
-        if (age.getYears() >= 16 && s != 4) {
+        if (age.getYears() >= 16 && s != 4 && relations.getLover() == null) {
             RandomEvents.findDate(this, world);
+        }
+        if (age.getYears() >= 18) {
+            while (true) {
+                if (attributes.getHealth() < 90 && bankAccount.getDeposit() > 100000) {
+                    if (attributes.getHappiness() > Math.random() * 200) {
+                        RandomEvents.hospital(this, bankAccount);
+                    }
+                } else if (attributes.getHealth() < 80 && bankAccount.getDeposit() > 70000) {
+                    if (attributes.getHappiness() > Math.random() * 200 - 10) {
+                        RandomEvents.hospital(this, bankAccount);
+                    }
+                } else if (attributes.getHealth() < 70 && bankAccount.getDeposit() > 49000) {
+                    if (attributes.getHappiness() > Math.random() * 200 - 20) {
+                        RandomEvents.hospital(this, bankAccount);
+                    }
+                } else if (attributes.getHealth() < 60 && bankAccount.getDeposit() > 34300) {
+                    if (attributes.getHappiness() > Math.random() * 200 - 30) {
+                        RandomEvents.hospital(this, bankAccount);
+                    }
+                } else if (attributes.getHealth() < 50 && bankAccount.getDeposit() > 240100) {
+                    if (attributes.getHappiness() > Math.random() * 200 - 40) {
+                        RandomEvents.hospital(this, bankAccount);
+                    }
+                } else if (attributes.getHealth() < 40 && bankAccount.getDeposit() > 168070) {
+                    if (attributes.getHappiness() > Math.random() * 200 - 50) {
+                        RandomEvents.hospital(this, bankAccount);
+                    }
+                } else if (attributes.getHealth() < 30 && bankAccount.getDeposit() > 117649) {
+                    if (attributes.getHappiness() > Math.random() * 200 - 60) {
+                        RandomEvents.hospital(this, bankAccount);
+                    }
+                } // TODO: add emergency hospitalization, which the city pays for
+                else {
+                    break;
+                }
+            }
         }
     }
 

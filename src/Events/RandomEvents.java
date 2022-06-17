@@ -4,10 +4,7 @@ import Actors.Human;
 import Buildings.House;
 import GameSystems.Age;
 import GameSystems.BankAccount;
-import GameSystems.Careers.Actor;
-import GameSystems.Careers.Basketball;
-import GameSystems.Careers.Career;
-import GameSystems.Careers.Programmer;
+import GameSystems.Careers.*;
 import GameSystems.Position;
 import GameSystems.Relations.*;
 import World.World;
@@ -16,6 +13,13 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class RandomEvents {
+    public static void humanMoveIn(World world) {
+        int peopleN = (int) (Math.random() * world.getHumans().size() / 100);
+        for (int i = 0; i < peopleN; i++) {
+            world.getHumans().add(new Human(world));
+        }
+    }
+
     public static void humanDeath(Human human, World world) {
         world.getBin().add(human);
         if (human.getRelations().getLover() != null) {
@@ -44,6 +48,9 @@ public class RandomEvents {
     }
 
     private static void parentDeath(Human check, Human human) {
+        if (human.getAge().getYears() >= 18) {
+            return;
+        }
         Caretaker parent = check.getRelations().getCaretakerRelations().get(check.getRelations().getCaretakers().indexOf(human));
         check.getAttributes().changeHappiness(-parent.getCloseness() * 1.5);
         check.getAttributes().changeTrauma(parent.getCloseness() / 5);
@@ -51,6 +58,9 @@ public class RandomEvents {
     }
 
     private static void friendDeath(Human check, Human human) {
+        if (!check.getRelations().getFriends().contains(human)) {
+            return;
+        }
         Platonic friendship = check.getRelations().getFriendships().get(check.getRelations().getFriends().indexOf(human));
         check.getAttributes().changeHappiness(-friendship.getCloseness() * 0.7);
         check.getAttributes().changeTrauma(friendship.getCloseness() / 20);
@@ -58,6 +68,9 @@ public class RandomEvents {
     }
 
     private static void familyDeath(Human check, Human human) {
+        if (!check.getRelations().getFamily().contains(human)) {
+            return;
+        }
         Familial familial = check.getRelations().getFamilyRelations().get(check.getRelations().getFamily().indexOf(human));
         check.getAttributes().changeHappiness(-familial.getCloseness());
         check.getAttributes().changeTrauma(familial.getCloseness() / 15);
@@ -65,6 +78,9 @@ public class RandomEvents {
     }
 
     private static void partnerDeath(Human check) {
+        if (check.getRelations().getLover() == null) {
+            return;
+        }
         check.getAttributes().changeTrauma(check.getRelations().getLover().getCloseness() / 10);
         check.getAttributes().changeHappiness(-check.getRelations().getLover().getCloseness() * 1.05);
         check.getRelations().setLover(null);
@@ -74,18 +90,20 @@ public class RandomEvents {
         Dependent dependent = check.getRelations().getDependentRelations().get(check.getRelations().getDependents().indexOf(human));
         check.getAttributes().changeHappiness(-dependent.getCloseness() * 1.5);
         check.getAttributes().changeTrauma(dependent.getCloseness() / 5);
-        check.getRelations().getFamilyRelations().remove(dependent);
+        check.getRelations().getDependentRelations().remove(dependent);
     }
 
     public static void inheritance(Human human, World world) {
         double split = 0;
         for (Dependent dependent : human.getRelations().getDependentRelations()) {
-            if (!dependent.getPerson().isAlive()) {
+            if (!dependent.getPerson().isAlive() || !dependent.getPerson().getRelations().getCaretakers().contains(human)) {
                 continue;
             }
-            dependent.getPerson().getAttributes().changeTrauma(dependent.getCloseness() / 5);
-            split += dependent.getCloseness();
-            dependent.getPerson().getAttributes().changeHappiness(-dependent.getCloseness() * 1.1);
+            if (dependent.getPerson().getRelations().getCaretakerRelations().get(dependent.getPerson().getRelations().getCaretakers().indexOf(human)).getCloseness() >= 0) {
+                dependent.getPerson().getAttributes().changeTrauma(dependent.getCloseness() / 5);
+                split += dependent.getCloseness();
+            }
+            dependent.getPerson().getAttributes().changeHappiness(-dependent.getPerson().getRelations().getCaretakerRelations().get(dependent.getPerson().getRelations().getCaretakers().indexOf(human)).getCloseness() * 1.1);
             dependent.getPerson().getRelations().getCaretakerRelations().remove(dependent.getPerson().getRelations().getCaretakers().indexOf(human));
             if (dependent.getPerson().getRelations().getCaretakerRelations().isEmpty()) {
                 for (Familial familial : dependent.getPerson().getRelations().getFamilyRelations()) {
@@ -96,11 +114,14 @@ public class RandomEvents {
                         if (!familial.getPerson().getAddress().isUsable()) {
                             continue;
                         }
+                        if (!familial.getPerson().getRelations().getFamily().contains(dependent.getPerson())) {
+                            continue;
+                        }
                         if (familial.getPerson().getRelations().getDependents().contains(dependent.getPerson().getRelations().getLover().getPerson()) || familial.getPerson().getRelations().getFamily().contains((dependent.getPerson().getRelations().getLover().getPerson()))) {
                             continue;
                         }
                         for (Human sibling : familial.getPerson().getRelations().getDependents()) {
-                            if (dependent.getPerson().getRelations().getFamily().contains(sibling)) {
+                            if (dependent.getPerson().getRelations().getFamily().contains(sibling) || dependent.getPerson() == sibling) {
                                 continue;
                             }
                             if (dependent.getPerson().getRelations().getFriends().contains(sibling)) {
@@ -130,6 +151,9 @@ public class RandomEvents {
                         }
                         for (Human family : familial.getPerson().getRelations().getFamily()) {
                             if (!dependent.getPerson().getRelations().getFamily().contains(family)) {
+                                if (dependent.getPerson() == family) {
+                                    continue;
+                                }
                                 if (dependent.getPerson().getRelations().getFriends().contains(family)) {
                                     dependent.getPerson().getRelations().getFamilyRelations().add(new Familial(dependent.getPerson(), family, dependent.getPerson().getRelations().getFriendships().get(dependent.getPerson().getRelations().getFriends().indexOf(family)).getCloseness(), dependent.getPerson().getRelations().getFriendships().get(dependent.getPerson().getRelations().getFriends().indexOf(family)).getAbusivenessFrom()));
                                     family.getRelations().getFamilyRelations().add(new Familial(family, dependent.getPerson(), family.getRelations().getFriendships().get(family.getRelations().getFriends().indexOf(dependent.getPerson())).getCloseness(), family.getRelations().getFriendships().get(family.getRelations().getFriends().indexOf(dependent.getPerson())).getAbusivenessFrom()));
@@ -197,7 +221,7 @@ public class RandomEvents {
             return;
         }
         for (House house : world.getHouses()) {
-            if (human.getAddress() == null && human.getBankAccount().getDeposit() > house.getValue()) {
+            if (human.getAddress() == null && human.getBankAccount().getDeposit() > house.getValue() && house.getOwnedBy() == null) {
                 house.setOwnedBy(human.getBankAccount());
                 human.getBankAccount().spend(house.getValue());
             }
@@ -214,13 +238,13 @@ public class RandomEvents {
         } else if (world.getHumans().size() < world.getHouses().size() * 1.5) {
             value = (int) (Math.random() * 700000) + 300000;
         } else {
-            value = (int) (Math.random() * 9300000) + 300000;
+            value = (int) (Math.random() * 9700000) + 300000;
         }
         while (Math.random() * 10 < 9) {
             if (value <= 100000) {
                 break;
             }
-            value *= 0.99;
+            value *= 0.9;
         }
         if (world.getCityBudget() < value) {
             value = (int) world.getCityBudget();
@@ -274,13 +298,27 @@ public class RandomEvents {
     }
 
     public static void careerOption(World world) {
-        int gen = (int) (Math.random() * 3);
+        int gen = (int) (Math.random() * 22);
         if (gen == 0) {
             world.getJobs().add(new Actor());
         } else if (gen == 1) {
-            world.getJobs().add(new Basketball());
+            world.getJobs().add(new Artist());
         } else if (gen == 2) {
+            world.getJobs().add(new Author());
+        } else if (gen == 3) {
+            world.getJobs().add(new Basketball());
+        } else if (gen >= 4 && gen <= 9) {
+            world.getJobs().add(new ConstructionWorker());
+        } else if (gen >= 10 && gen <= 15) {
+            world.getJobs().add(new DeliveryPerson());
+        } else if (gen == 16) {
+            world.getJobs().add(new Musician());
+        } else if (gen >= 17 && gen <= 22) {
             world.getJobs().add(new Programmer());
+        } else if (gen >= 23 && gen <= 26) {
+            world.getJobs().add(new Receptionist());
+        } else if (gen >= 27 && gen <= 32) {
+            world.getJobs().add(new Waiter());
         }
     }
 
@@ -328,6 +366,8 @@ public class RandomEvents {
             human1.getRelations().setLover(new Romantic(human1, human));
             if (human.getRelations().getFriends().contains(human1)) {
                 human.getRelations().getFriendships().remove(human.getRelations().getFriends().indexOf(human1));
+            }
+            if (human1.getRelations().getFriends().contains(human)) {
                 human1.getRelations().getFriendships().remove(human1.getRelations().getFriends().indexOf(human));
             }
             return true;
@@ -388,8 +428,6 @@ public class RandomEvents {
     }
 
     private static void marriageAddDependents(Human human, Human human1) {
-        //TODO: Make dependents siblings
-        //TODO: Make family dependents' family
         for (Human dependent : human1.getRelations().getDependents()) {
             if (!dependent.isAlive()) {
                 continue;
@@ -404,6 +442,43 @@ public class RandomEvents {
             } else {
                 dependent.getRelations().getCaretakerRelations().add(new Caretaker(dependent, human));
                 human.getRelations().getDependentRelations().add(new Dependent(human, dependent));
+            }
+            for (Human dependent1 : human.getRelations().getDependents()) {
+                if (!dependent1.isAlive() || dependent.getRelations().getFamily().contains(dependent1) || dependent == dependent1) {
+                    continue;
+                }
+                if (dependent.getRelations().getFriends().contains(dependent1)) {
+                    if (!dependent1.getRelations().getFriends().contains(dependent)) {
+                        continue;
+                    }
+                    Platonic dSide = dependent.getRelations().getFriendships().get(dependent.getRelations().getFriends().indexOf(dependent1));
+                    dependent.getRelations().getFamilyRelations().add(new Familial(dependent, dependent1, dSide.getCloseness(),  dSide.getAbusivenessFrom()));
+                    Platonic d1Side = dependent1.getRelations().getFriendships().get(dependent1.getRelations().getFriends().indexOf(dependent));
+                    human.getRelations().getFamilyRelations().add(new Dependent(dependent1, dependent, d1Side.getCloseness(), d1Side.getAbusivenessFrom()));
+                    dependent.getRelations().getFriendships().remove(dSide);
+                    human.getRelations().getFriendships().remove(d1Side);
+                } else {
+                    dependent.getRelations().getFamilyRelations().add(new Familial(dependent, dependent1));
+                    human.getRelations().getFamilyRelations().add(new Familial(dependent1, dependent));
+                }
+            }
+            for (Human familial : human.getRelations().getFamily()) {
+                if (!familial.isAlive() || dependent.getRelations().getFamily().contains(familial) || dependent == familial) {
+                    continue;
+                }
+                if (dependent.getRelations().getFriends().contains(familial)) {
+                    Platonic dSide = dependent.getRelations().getFriendships().get(dependent.getRelations().getFriends().indexOf(familial));
+                    dependent.getRelations().getFamilyRelations().add(new Familial(dependent, familial, dSide.getCloseness(),  dSide.getAbusivenessFrom()));
+                    if (familial.getRelations().getFriends().contains(dependent)) {
+                        Platonic fSide = familial.getRelations().getFriendships().get(familial.getRelations().getFriends().indexOf(dependent));
+                        human.getRelations().getFamilyRelations().add(new Dependent(familial, dependent, fSide.getCloseness(), fSide.getAbusivenessFrom()));
+                        human.getRelations().getFriendships().remove(fSide);
+                    }
+                    dependent.getRelations().getFriendships().remove(dSide);
+                } else {
+                    dependent.getRelations().getFamilyRelations().add(new Familial(dependent, familial));
+                    human.getRelations().getFamilyRelations().add(new Familial(familial, dependent));
+                }
             }
         }
     }
@@ -427,28 +502,25 @@ public class RandomEvents {
                 return;
             }
         }
-        double gen = 10000;
+        double gen = 100;
         if (human.getAge().getYears() < 25) {
-            gen -=  25 - human.getAge().getYears();
-        } else if (human.getAge().getYears() > 30) {
-            gen -= human.getAge().getYears() - 30;
+            gen /=  25 - human.getAge().getYears();
         }
         if (human.getRelations().getLover().getPerson().getAge().getYears() < 25) {
-            gen -= 25 - human.getRelations().getLover().getPerson().getAge().getYears();
-        } else if (human.getRelations().getLover().getPerson().getAge().getYears() > 30) {
-            gen -= human.getRelations().getLover().getPerson().getAge().getYears() - 30;
+            gen /= 25 - human.getRelations().getLover().getPerson().getAge().getYears();
         }
         if (gen <= 0.001) {
             gen = 0.001;
         }
-        gen *= human.getBankAccount().getDeposit() / 100000;
+        gen *= human.getBankAccount().getDeposit() / 50000;
         gen *= human.getRelations().getLover().getCloseness() / 100.0;
-        if (!human.getRelations().getDependentRelations().isEmpty()) {
-            gen /= human.getRelations().getDependentRelations().size();
-        }
+        gen /= (human.getRelations().getDependentRelations().size() + 1) * (human.getRelations().getDependentRelations().size() + 1) * (human.getRelations().getDependentRelations().size() + 1);
         if (gen > Math.random()) {
             Human child = new Human(human, human.getRelations().getLover().getPerson());
             for (Human sibling : human.getRelations().getDependents()) {
+                if (child == sibling) {
+                    continue;
+                }
                 child.getRelations().getFamilyRelations().add(new Familial(child, sibling));
                 sibling.getRelations().getFamilyRelations().add(new Familial(sibling, child));
             }
@@ -459,6 +531,9 @@ public class RandomEvents {
             ArrayList<Human> family = child.getRelations().getFamily();
             for (Familial familial : human.getRelations().getLover().getPerson().getRelations().getFamilyRelations()) {
                 if (!family.contains(familial.getPerson())) {
+                    if (child == familial.getPerson()) {
+                        continue;
+                    }
                     child.getRelations().getFamilyRelations().add(new Familial(child, familial.getPerson()));
                 }
             }
@@ -487,9 +562,11 @@ public class RandomEvents {
             romantic.getPerson().getBankAccount().setDeposit(romantic.getSelf().getBankAccount().getDeposit() / 2);
         }
         romantic.getSelf().getAttributes().changeHappiness(-romantic.getCloseness() * (Math.random() / 1.5 + 0.5));
-        romantic.getPerson().getAttributes().changeHappiness(-romantic.getPerson().getRelations().getLover().getCloseness() * (Math.random() / 1.5 + 0.5));
         romantic.getSelf().getRelations().setLover(null);
-        romantic.getPerson().getRelations().setLover(null);
+        if (romantic.getPerson().getRelations().getLover() != null) {
+            romantic.getPerson().getAttributes().changeHappiness(-romantic.getPerson().getRelations().getLover().getCloseness() * (Math.random() / 1.5 + 0.5));
+            romantic.getPerson().getRelations().setLover(null);
+        }
     }
 
     public static void newFriend(Human human, World world) {
@@ -537,6 +614,14 @@ public class RandomEvents {
         platonic.getSelf().getAttributes().changeHappiness(-platonic.getCloseness() * (Math.random() / 2 + 0.5));
         platonic.getPerson().getAttributes().changeHappiness(-platonic.getCloseness() * (Math.random() / 2 + 0.5));
         remove.add(platonic);
+        if (!platonic.getPerson().getRelations().getFriends().contains(platonic.getSelf())) {
+            return;
+        }
         platonic.getPerson().getRelations().getFriendships().remove(platonic.getPerson().getRelations().getFriends().indexOf(platonic.getSelf()));
+    }
+
+    public static void hospital(Human human, BankAccount bankAccount) {
+        human.getAttributes().changeHealth(Math.random() * 10);
+        bankAccount.spend(5000);
     }
 }

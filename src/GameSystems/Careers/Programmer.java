@@ -6,7 +6,7 @@ public class Programmer extends Career{
     private final int baseSalary = 50000;
     private final int salaryGrowth = 100;
     private final int retirementAge = 65;
-    private final int careerID = 2;
+    private final int careerID = 7;
     private final int gradeRequired = 90;
 
     public Programmer() {
