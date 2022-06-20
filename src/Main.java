@@ -1,34 +1,49 @@
 import Actors.Human;
 import World.World;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        World city = new World(1000, 1000);
         Scanner scanner = new Scanner(System.in);
-        city.printInfo();
-//        String inputs = scanner.nextLine();
-        city.setDaysPerYear(1);
-//        Human tracked1 = new Human(city);
-//        Human tracked2 = new Human(city);
-//        Human tracked3 = new Human(city);
-//        city.getHumans().add(tracked1);
-//        city.getHumans().add(tracked3);
-//        city.getHumans().add(tracked3);
-//        city.getTracked().add(tracked1);
-//        city.getTracked().add(tracked2);
-//        city.getTracked().add(tracked3);
+        System.out.println("Please input the initial population:");
+        int population = scanner.nextInt();
+        World city = new World(population, population);
+        city.printTrackedInfo();
         while (!city.getHumans().isEmpty()) {
-//            city.update();
-            for (int i = 0; i < 10; i++) {
+            if (nextCommand(city)) {
                 city.update();
+                city.printTrackedInfo();
+            } else {
+                break;
             }
-            if (city.getHumans().isEmpty()) {
-                return;
+        }
+    }
+
+    public static boolean nextCommand(World city) {
+        String[] commands = {"+", "quit", "set days", "add tracked person"};
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please input the next command");
+        if (scanner.nextLine().equals(commands[0])) {
+            return true;
+        } else if (scanner.nextLine().equals(commands[1])) {
+            return false;
+        } else if (scanner.nextLine().equals(commands[2])) {
+            int days = scanner.nextInt();
+            if (days <= 0 || days > 10) {
+                //TODO: Make this a seperate recursive function
+                System.out.println("Please enter an integer between 1 and 10.");
             }
-//            city.printInfo();
-//            scanner.nextLine();
+            city.setDaysPerYear(days);
+            return nextCommand(city);
+        } else {
+            System.out.println("Invalid command, please try again.");
+            System.out.println("Valid commands are:");
+            for (String c : commands) {
+                System.out.println(c);
+            }
+            return nextCommand(city);
         }
     }
 }

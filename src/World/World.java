@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class World {
     private int daysPerYear;
-    private int secondsPerDay;
+    private int yearsPerUpdate;
     private int skillIncreaseBalancing;
     private int jobSkillIncreaseBalancing;
 
@@ -24,7 +24,7 @@ public class World {
 
     public World(int houses, int population) {
         daysPerYear = 1;
-        secondsPerDay = 30;
+        yearsPerUpdate = 30;
         skillIncreaseBalancing = 20;
         jobSkillIncreaseBalancing = 100;
         cityBudget = population * 10000 + houses * 500000;
@@ -56,7 +56,7 @@ public class World {
     public void update() {
         RandomEvents.humanMoveIn(this);
         for (House house : houses) {
-            house.update(daysPerYear);
+            house.update(this, daysPerYear);
         }
         for (Human human : humans) {
             human.update(this);
@@ -108,12 +108,12 @@ public class World {
         this.daysPerYear = daysPerYear;
     }
 
-    public int getSecondsPerDay() {
-        return secondsPerDay;
+    public int getYearsPerUpdate() {
+        return yearsPerUpdate;
     }
 
-    public void setSecondsPerDay(int secondsPerDay) {
-        this.secondsPerDay = secondsPerDay;
+    public void setYearsPerUpdate(int yearsPerUpdate) {
+        this.yearsPerUpdate = yearsPerUpdate;
     }
 
     public int getSkillIncreaseBalancing() {
@@ -192,6 +192,15 @@ public class World {
         System.out.println(cityBudget);
         System.out.println();
         for (Human human : humans) {
+            human.printInfo();
+        }
+        System.out.println();
+    }
+
+    public void printTrackedInfo() {
+        System.out.println("City Budget:" + cityBudget);
+        System.out.println();
+        for (Human human : tracked) {
             human.printInfo();
         }
         System.out.println();
