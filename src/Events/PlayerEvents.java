@@ -7,9 +7,17 @@ import GameSystems.Skills.*;
 import World.World;
 
 public class PlayerEvents {
-    public static void EarthQuake(World world, Position position, int intensity) {
+    public static void earthQuake(World world, Position position, int intensity) {
         for (House house : world.getHouses()) {
             if (Math.random() < house.getAddress().distance(position) * intensity) {
+                house.setUsable(false);
+            }
+        }
+    }
+
+    public static void randomEarthQuake(World world, int intensity) {
+        for (House house : world.getHouses()) {
+            if (Math.random() * intensity > 30) {
                 house.setUsable(false);
             }
         }

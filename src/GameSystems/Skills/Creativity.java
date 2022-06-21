@@ -20,6 +20,10 @@ public class Creativity {
         }
     }
 
+    public Creativity(int c) {
+        potential = c;
+    }
+
     public Creativity(int potential, double musical, double art, double writing) {
         this.potential = potential;
         this.musical = musical;

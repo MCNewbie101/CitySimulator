@@ -22,6 +22,10 @@ public class Physical {
         }
     }
 
+    public Physical(int p) {
+        potential = p;
+    }
+
     public Physical(int potential, double speed, double strength, double dancing, double basketball) {
         this.potential = potential;
         this.speed = speed;

@@ -21,6 +21,10 @@ public class Mental {
         }
     }
 
+    public Mental(int m) {
+        potential = m;
+    }
+
     public Mental(int potential, double programming, double engineering, double math, double chemistry) {
         this.potential = potential;
         this.programming = programming;

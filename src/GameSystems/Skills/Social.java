@@ -20,6 +20,10 @@ public class Social {
         }
     }
 
+    public Social(int s) {
+        potential = s;
+    }
+
     public Social(int potential, int leadership, int communication, int acting) {
         this.potential = potential;
         this.leadership = leadership;

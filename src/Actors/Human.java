@@ -35,7 +35,7 @@ public class Human {
         }
         skills = new Skills();
         for (int i = 0; i < age.getYears(); i++) {
-            skills.update(world.getSkillIncreaseBalancing(), world.getDaysPerYear());
+            skills.update(world.getSkillIncreaseBalancing(), 1);
         }
         int gen = (int) (Math.random() * 3000000);
         while (gen > 100000) {
@@ -100,13 +100,30 @@ public class Human {
         this.gender = gender;
         this.skills = skills;
         for (int i = 0; i < age.getYears(); i++) {
-            skills.update(world.getSkillIncreaseBalancing(), world.getDaysPerYear());
+            skills.update(world.getSkillIncreaseBalancing(), 1);
         }
         this.job = null;
         this.retirement = null;
         this.education = education;
         this.address = null;
         this.attributes = attributes;
+        this.relations = new Relations();
+        this.bankAccount = bankAccount;
+        isAlive = true;
+    }
+
+    public Human(World world, Age age, String gender, Skills skills,  BankAccount bankAccount) {
+        this.age = age;
+        this.gender = gender;
+        this.skills = skills;
+        for (int i = 0; i < age.getYears(); i++) {
+            skills.update(world.getSkillIncreaseBalancing(), 1);
+        }
+        this.job = null;
+        this.retirement = null;
+        this.address = null;
+        attributes = new Attributes();
+        education = new Education(attributes);
         this.relations = new Relations();
         this.bankAccount = bankAccount;
         isAlive = true;
@@ -409,6 +426,7 @@ public class Human {
     }
 
     public void printInfo() {
+        //TODO: Make this more readable
         age.printInfo();
         System.out.println(gender);
 //        skills.printInfo();
