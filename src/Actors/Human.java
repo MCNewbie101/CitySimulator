@@ -309,7 +309,6 @@ public class Human {
         }
     }
 
-    //TODO: Is this realistic? Maybe check again later?
     private void aid(Human human) {
         if (bankAccount.getDeposit() < 30000 && attributes.getPersonality().getSelfishness() > 5) {
             return;
@@ -426,10 +425,9 @@ public class Human {
     }
 
     public void printInfo() {
-        //TODO: Make this more readable
         age.printInfo();
-        System.out.println(gender);
-//        skills.printInfo();
+        System.out.println("Gender: " + gender);
+        attributes.printInfo();
         if (job != null) {
             job.printInfo();
         } else {
@@ -440,7 +438,14 @@ public class Human {
         } else {
             System.out.println("No house");
         }
-        attributes.printInfo();
         bankAccount.printInfo();
+        relations.printInfo(age);
+    }
+
+    //TODO: Finish this
+    public void printDetails() {
+        age.printInfo();
+        System.out.println("Gender: " + gender);
+        skills.printInfo();
     }
 }

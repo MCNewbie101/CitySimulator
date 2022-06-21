@@ -221,8 +221,27 @@ public class RandomEvents {
             return;
         }
         for (House house : world.getHouses()) {
-            if (human.getAddress() == null && human.getBankAccount().getDeposit() > house.getValue() && house.getOwnedBy() == null) {
+            if (human.getBankAccount().getDeposit() > house.getValue() && house.getOwnedBy() == null) {
                 house.buy(human.getBankAccount());
+                if (human.getAddress() != null) {
+                    human.getAddress().setOwnedBy(null);
+                    for (Human human1 : human.getRelations().getDependents()) {
+                        if (human1.getAddress() == human.getAddress()) {
+                            human1.setAddress(null);
+                        }
+                    }
+                }
+                human.setAddress(house);
+                if (human.getRelations().getLover() != null) {
+                    if (human.getRelations().getLover().isMarried()) {
+                        human.getRelations().getLover().getPerson().setAddress(house);
+                    }
+                }
+                for (Human human1 : human.getRelations().getDependents()) {
+                    if (human1.getAddress() == null) {
+                        human1.setAddress(house);
+                    }
+                }
             }
         }
     }
@@ -250,6 +269,27 @@ public class RandomEvents {
         }
         world.getHouses().add(new House(value, true, new Age(), new Position(), null));
         world.citySpending(value);
+    }
+
+    public static void repairHouse(World world, House house) {
+        if (house.isUsable()) {
+            return;
+        }
+        if (house.getOwnedBy() != null) {
+            if (house.getOwnedBy().getDeposit() > house.getValue()) {
+                if (house.getOwnedBy().getDeposit() - house.getValue() > Math.random() * 100000) {
+                    house.getOwnedBy().spend(house.getValue());
+                    house.setUsable(true);
+                }
+            }
+        } else {
+            if (world.getCityBudget() > house.getValue()) {
+                if (world.getCityBudget() - house.getValue() > Math.random() * 1000000000) {
+                    world.citySpending(house.getValue());
+                    house.setUsable(true);
+                }
+            }
+        }
     }
 
     public static void jobSearch(Human human, World world) {
@@ -483,7 +523,6 @@ public class RandomEvents {
     }
 
     public static void childBirth(Human human, World world) {
-        //TODO: Find a good number for gen
         if (!human.isAlive() || ! human.getRelations().getLover().getPerson().isAlive()) {
             return;
         }

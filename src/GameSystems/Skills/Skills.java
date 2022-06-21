@@ -105,6 +105,7 @@ public class Skills {
     }
 
     public void printInfo() {
+        System.out.println("Skills:");
         creativity.printInfo();
         mental.printInfo();
         physical.printInfo();

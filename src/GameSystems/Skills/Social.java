@@ -98,9 +98,9 @@ public class Social {
     }
 
     public void printInfo() {
-        System.out.println(potential);
-        System.out.println(leadership);
-        System.out.println(communication);
-        System.out.println(acting);
+        System.out.println("Social skills potential: " + potential);
+        System.out.println("Leadership skills: " + (int) leadership);
+        System.out.println("Communication skills: " + (int) communication);
+        System.out.println("Acting skills: " + (int) acting);
     }
 }

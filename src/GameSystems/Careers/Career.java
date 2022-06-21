@@ -15,6 +15,7 @@ public abstract class Career {
     private boolean taken;
     private int retirementAge;
     private int careerID;
+    private final String[] careerNames = {"Actor", "Artist", "Author", "Basketball Player", "Construction Worker", "DeliveryPerson", "Musician", "Programmer", "Receptionist", "Waiter"};
 
     public Career() {
         performance = 0;
@@ -141,8 +142,9 @@ public abstract class Career {
     }
 
     public void printInfo() {
-        System.out.println(salary);
-        System.out.println(satisfaction);
-        System.out.println(performance);
+        System.out.println("Career: " + careerNames[careerID]);
+        System.out.println("Salary: " + salary);
+        System.out.println("Satisfaction: " + satisfaction);
+        System.out.println("Performance: " + performance);
     }
 }

@@ -114,10 +114,10 @@ public class Mental {
     }
 
     public void printInfo() {
-        System.out.println(potential);
-        System.out.println(programming);
-        System.out.println(engineering);
-        System.out.println(math);
-        System.out.println(chemistry);
+        System.out.println("Intelligence potential: " + potential);
+        System.out.println("Programming skill: " + (int) programming);
+        System.out.println("Engineering skill: " + (int) engineering);
+        System.out.println("Mathematics skill: " + (int) math);
+        System.out.println("Chemistry skill: " + (int) chemistry);
     }
 }

@@ -1,6 +1,7 @@
 package GameSystems.Relations;
 
 import Actors.Human;
+import GameSystems.Age;
 
 import java.util.ArrayList;
 
@@ -164,5 +165,22 @@ public class Relations {
 
     public void setLover(Romantic lover) {
         this.lover = lover;
+    }
+
+    public void printInfo(Age age) {
+        if (age.getYears() > 18) {
+            if (lover == null) {
+                System.out.println("Single");
+            } else if (!lover.isMarried()) {
+                System.out.println("Dating");
+            } else {
+                System.out.println("Married");
+            }
+            System.out.println("Number of dependants: " + dependents.size());
+        } else {
+            System.out.println("Number of caretakers: " + caretakers.size());
+        }
+        System.out.println("Number of other family members: " + family.size());
+        System.out.println("Number of friends: " + friends.size());
     }
 }

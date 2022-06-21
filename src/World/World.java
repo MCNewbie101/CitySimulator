@@ -68,6 +68,11 @@ public class World {
         humans.addAll(toAdd);
         bin = new ArrayList<>();
         toAdd = new ArrayList<>();
+        for (House house : houses) {
+            if (!house.isUsable()) {
+                RandomEvents.repairHouse(this, house);
+            }
+        }
         double gen = humans.size() * 1.0 / houses.size();
         while (Math.random() * 1.5 < gen) {
             int houseN = houses.size();

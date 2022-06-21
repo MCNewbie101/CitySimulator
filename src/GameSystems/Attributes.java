@@ -127,7 +127,7 @@ public class Attributes {
         checkInBounds(human);
         trauma += 3;
     }
-    // TODO: Makes sure this actually make sense
+
     public void updateMoney(Human human, BankAccount bankAccount, int daysPerYear) {
         if (bankAccount == null) {
             happiness -= 50.0 / daysPerYear;
@@ -205,8 +205,8 @@ public class Attributes {
     }
 
     public void printInfo() {
-        System.out.println(happiness);
-        System.out.println(health);
-        System.out.println(trauma);
+        System.out.println("Attributes:");
+        System.out.println("Happiness: " + happiness);
+        System.out.println("Health: " + health);
     }
 }

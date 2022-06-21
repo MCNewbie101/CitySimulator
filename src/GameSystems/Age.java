@@ -27,6 +27,6 @@ public class Age {
     }
 
     public void printInfo() {
-        System.out.println(years);
+        System.out.println("Age: " + years);
     }
 }

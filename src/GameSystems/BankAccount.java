@@ -89,6 +89,6 @@ public class BankAccount {
     }
 
     public void printInfo() {
-        System.out.println(deposit);
+        System.out.println("Bank balance: " + deposit);
     }
 }

@@ -229,6 +229,21 @@ public class Main {
     }
 
     public static void addFrom(World world) {
-
+        Scanner scanner = new Scanner(System.in);
+        String inputs = scanner.nextLine();
+        if (!inputs.equals("back")) {
+            if (inputs.chars().allMatch(Character::isDigit)) {
+                int num = Integer.parseInt(inputs);
+                if (num >= world.getHumans().size()) {
+                    System.out.println("Please input an integer that refers to an existing person, or input \"back\" if you wish to cancel the command.");
+                    addFrom(world);
+                } else {
+                    world.getTracked().add(world.getHumans().get(num));
+                }
+            } else {
+                System.out.println("Please input an integer that refers to an existing person, or input \"back\" if you wish to cancel the command.");
+                addFrom(world);
+            }
+        }
     }
 }

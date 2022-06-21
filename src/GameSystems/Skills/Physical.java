@@ -123,10 +123,10 @@ public class Physical {
     }
 
     public void printInfo() {
-        System.out.println(potential);
-        System.out.println(speed);
-        System.out.println(strength);
-        System.out.println(dancing);
-        System.out.println(basketball);
+        System.out.println("Physical potential: " + potential);
+        System.out.println("Speed: " + (int) speed);
+        System.out.println("Strength: " + (int) strength);
+        System.out.println("Dancing skill: " + (int) dancing);
+        System.out.println("Basketball skill: " + (int) basketball);
     }
 }

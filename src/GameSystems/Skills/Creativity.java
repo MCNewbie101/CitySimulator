@@ -98,9 +98,9 @@ public class Creativity {
     }
 
     public void printInfo() {
-        System.out.println(potential);
-        System.out.println(musical);
-        System.out.println(art);
-        System.out.println(writing);
+        System.out.println("Creativity potential: " + potential);
+        System.out.println("Music skills: " + (int) musical);
+        System.out.println("Art skills: " + (int) art);
+        System.out.println("Writing skills: " + (int) writing);
     }
 }
