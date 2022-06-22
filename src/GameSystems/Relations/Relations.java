@@ -2,6 +2,7 @@ package GameSystems.Relations;
 
 import Actors.Human;
 import GameSystems.Age;
+import World.World;
 
 import java.util.ArrayList;
 
@@ -184,22 +185,41 @@ public class Relations {
         System.out.println("Number of friends: " + friends.size());
     }
 
-    public void printDetails(Age age) {
+    public void printDetails(World world, Age age) {
         if (age.getYears() > 18) {
             if (lover == null) {
                 System.out.println("Single");
             } else if (!lover.isMarried()) {
                 System.out.println("Dating");
+                System.out.println("Partner ID: " + world.getHumans().indexOf(lover.getPerson()));
                 System.out.println("Closeness: " + lover.getCloseness());
             } else {
                 System.out.println("Married");
+                System.out.println("Partner ID: " + world.getHumans().indexOf(lover.getPerson()));
                 System.out.println("Closeness: " + lover.getCloseness());
             }
             System.out.println("Number of dependants: " + dependents.size());
+            for (Dependent dependent : dependents) {
+                System.out.println("Dependent ID: " + world.getHumans().indexOf(dependent.getPerson()));
+                System.out.println("Dependent age: " + dependent.getPerson().getAge().getYears());
+                System.out.println("Closeness: " + dependent.getCloseness());
+            }
         } else {
             System.out.println("Number of caretakers: " + caretakers.size());
+            for (Caretaker caretaker : caretakers) {
+                System.out.println("Caretaker ID: " + world.getHumans().indexOf(caretaker.getPerson()));
+                System.out.println("Closeness: " + caretaker.getCloseness());
+            }
         }
         System.out.println("Number of other family members: " + family.size());
+        for (Familial familial : family) {
+            System.out.println("Family member ID: " + world.getHumans().indexOf(familial.getPerson()));
+            System.out.println("Closeness: " + familial.getCloseness());
+        }
         System.out.println("Number of friends: " + friends.size());
+        for (Platonic platonic : friends) {
+            System.out.println("Friend ID: " + world.getHumans().indexOf(platonic.getPerson()));
+            System.out.println("Closeness: " + platonic.getCloseness());
+        }
     }
 }

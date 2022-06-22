@@ -424,7 +424,8 @@ public class Human {
         this.s = s;
     }
 
-    public void printInfo() {
+    public void printInfo(World world) {
+        System.out.println("ID: " + world.getHumans().indexOf(this));
         age.printInfo();
         System.out.println("Gender: " + gender);
         attributes.printInfo();
@@ -444,13 +445,16 @@ public class Human {
         relations.printInfo(age);
     }
 
-    //TODO: Finish this
-    public void printDetails() {
+    public void printDetails(World world) {
+        System.out.println("ID: " + world.getHumans().indexOf(this));
         age.printInfo();
         System.out.println("Gender: " + gender);
         attributes.printInfo();
         attributes.getPersonality().printInfo();
         skills.printInfo();
+        if (age.getYears() < 18 && age.getYears() >= 5) {
+            System.out.println("Grade average: " + education.getGrade());
+        }
         if (job != null) {
             job.printInfo();
         } else if (retirement != null) {
@@ -466,6 +470,6 @@ public class Human {
             System.out.println("No house");
         }
         bankAccount.printInfo();
-        relations.printDetails(age);
+        relations.printDetails(world, age);
     }
 }

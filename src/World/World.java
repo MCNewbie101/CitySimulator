@@ -198,7 +198,7 @@ public class World {
         System.out.println(cityBudget);
         System.out.println();
         for (Human human : humans) {
-            human.printInfo();
+            human.printInfo(this);
         }
         System.out.println();
     }
@@ -208,7 +208,7 @@ public class World {
         System.out.println("Population: " + humans.size());
         System.out.println();
         for (Human human : tracked) {
-            human.printInfo();
+            human.printInfo(this);
             System.out.println();
         }
         System.out.println();

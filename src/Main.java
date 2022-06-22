@@ -31,20 +31,20 @@ public class Main {
         String inputs = scanner.nextLine();
         if (inputs.chars().allMatch(Character::isDigit)) {
             int num = Integer.parseInt(inputs);
-            if (num > 1000 || num < 10) {
-                System.out.println("Please input an integer between 10 and 1000.");
+            if (num > 10000 || num < 10) {
+                System.out.println("Please input an integer between 10 and 10000.");
                 return initPopulation();
             } else {
                 return num;
             }
         } else {
-            System.out.println("Please input an integer between 10 and 1000.");
+            System.out.println("Please input an integer between 10 and 10000.");
             return initPopulation();
         }
     }
 
     public static boolean nextCommand(World city) {
-        String[] commands = {"+", "quit", "set days", "set update", "add tracked person", "add random tracked", "earthquake", "view info", "add tracked from city"};
+        String[] commands = {"+", "quit", "set days", "set update", "add tracked person", "add random tracked", "add tracked from city", "remove tracked", "earthquake", "view info", "view detailed info", "kill", "destroy housing"};
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please input the next command");
         String inputs = scanner.nextLine();
@@ -68,17 +68,29 @@ public class Main {
             city.getTracked().add(human);
             return nextCommand(city);
         } else if (inputs.equals(commands[6])) {
+            addFrom(city);
+            return nextCommand(city);
+        } else if (inputs.equals(commands[7])) {
+            removeTracked(city);
+            return nextCommand(city);
+        } else if (inputs.equals(commands[8])) {
             System.out.println("How intense should this earthquake be?");
             int intensity = addInt0_100();
             if (intensity != -1) {
                 PlayerEvents.randomEarthQuake(city, intensity);
             }
             return nextCommand(city);
-        } else if (inputs.equals(commands[7])) {
+        } else if (inputs.equals(commands[9])) {
             city.printTrackedInfo();
             return nextCommand(city);
-        } else if (inputs.equals(commands[8])) {
-            addFrom(city);
+        } else if (inputs.equals(commands[10])) {
+            printDetailedInfo(city);
+            return nextCommand(city);
+        } else if (inputs.equals(commands[11])) {
+            killCommand(city);
+            return nextCommand(city);
+        } else if (inputs.equals(commands[12])) {
+            destroyProperty(city);
             return nextCommand(city);
         } else {
             System.out.println("Invalid command, please try again. Please keep all commands in lowercase.");
@@ -230,6 +242,7 @@ public class Main {
 
     public static void addFrom(World world) {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Which person do you want to track?");
         String inputs = scanner.nextLine();
         if (!inputs.equals("back")) {
             if (inputs.chars().allMatch(Character::isDigit)) {
@@ -243,6 +256,86 @@ public class Main {
             } else {
                 System.out.println("Please input an integer that refers to an existing person, or input \"back\" if you wish to cancel the command.");
                 addFrom(world);
+            }
+        }
+    }
+
+    public static void printDetailedInfo(World world) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Which person's details do you want to view?");
+        String inputs = scanner.nextLine();
+        if (!inputs.equals("back")) {
+            if (inputs.chars().allMatch(Character::isDigit)) {
+                int num = Integer.parseInt(inputs);
+                if (num >= world.getTracked().size()) {
+                    System.out.println("Please input an integer that refers to an existing tracked person, or input \"back\" if you wish to cancel the command.");
+                    printDetailedInfo(world);
+                } else {
+                    world.getTracked().get(num).printDetails(world);
+                }
+            } else {
+                System.out.println("Please input an integer that refers to an existing tracked person, or input \"back\" if you wish to cancel the command.");
+                printDetailedInfo(world);
+            }
+        }
+    }
+
+    public static void killCommand(World world) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Which person do you want to kill?");
+        String inputs = scanner.nextLine();
+        if (!inputs.equals("back")) {
+            if (inputs.chars().allMatch(Character::isDigit)) {
+                int num = Integer.parseInt(inputs);
+                if (num >= world.getHumans().size()) {
+                    System.out.println("Please input an integer that refers to an existing person, or input \"back\" if you wish to cancel the command.");
+                    killCommand(world);
+                } else {
+                    PlayerEvents.killCommand(world, world.getHumans().get(num));
+                }
+            } else {
+                System.out.println("Please input an integer that refers to an existing person, or input \"back\" if you wish to cancel the command.");
+                killCommand(world);
+            }
+        }
+    }
+
+    public static void destroyProperty(World world) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Which person's house do you want to destroy?");
+        String inputs = scanner.nextLine();
+        if (!inputs.equals("back")) {
+            if (inputs.chars().allMatch(Character::isDigit)) {
+                int num = Integer.parseInt(inputs);
+                if (num >= world.getHumans().size()) {
+                    System.out.println("Please input an integer that refers to an existing person, or input \"back\" if you wish to cancel the command.");
+                    destroyProperty(world);
+                } else {
+                    PlayerEvents.destroyProperty(world.getHumans().get(num));
+                }
+            } else {
+                System.out.println("Please input an integer that refers to an existing person, or input \"back\" if you wish to cancel the command.");
+                destroyProperty(world);
+            }
+        }
+    }
+
+    public static void removeTracked(World world) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Which person do you want to stop tracking?");
+        String inputs = scanner.nextLine();
+        if (!inputs.equals("back")) {
+            if (inputs.chars().allMatch(Character::isDigit)) {
+                int num = Integer.parseInt(inputs);
+                if (num >= world.getHumans().size()) {
+                    System.out.println("Please input an integer that refers to an existing person, or input \"back\" if you wish to cancel the command.");
+                    removeTracked(world);
+                } else {
+                    world.getTracked().remove(num);
+                }
+            } else {
+                System.out.println("Please input an integer that refers to an existing person, or input \"back\" if you wish to cancel the command.");
+                removeTracked(world);
             }
         }
     }

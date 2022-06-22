@@ -621,6 +621,7 @@ public class RandomEvents {
             return;
         }
         for (Human human1 : world.getHumans()) {
+            //TODO: Make it so that more friends = less likely to get even more friends
             if (!human1.isAlive()) {
                 continue;
             }
