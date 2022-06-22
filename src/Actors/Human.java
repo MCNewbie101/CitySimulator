@@ -430,6 +430,8 @@ public class Human {
         attributes.printInfo();
         if (job != null) {
             job.printInfo();
+        } else if (retirement != null) {
+            System.out.println("Retired");
         } else {
             System.out.println("Jobless");
         }
@@ -446,6 +448,24 @@ public class Human {
     public void printDetails() {
         age.printInfo();
         System.out.println("Gender: " + gender);
+        attributes.printInfo();
+        attributes.getPersonality().printInfo();
         skills.printInfo();
+        if (job != null) {
+            job.printInfo();
+        } else if (retirement != null) {
+            System.out.println("Retired");
+            System.out.println("Pension: " + retirement.getPension());
+        } else {
+            System.out.println("Jobless");
+        }
+        if (address != null) {
+            System.out.println("House:");
+            address.printInfo();
+        } else {
+            System.out.println("No house");
+        }
+        bankAccount.printInfo();
+        relations.printDetails(age);
     }
 }

@@ -78,4 +78,10 @@ public abstract class Building {
     public void setAddress(Position position) {
         this.position = position;
     }
+
+    public void printInfo() {
+        System.out.println("Value: " + value);
+        System.out.println("Age: " + age.getYears());
+        System.out.println("Usable: " + usable);
+    }
 }

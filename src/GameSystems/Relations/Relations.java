@@ -183,4 +183,23 @@ public class Relations {
         System.out.println("Number of other family members: " + family.size());
         System.out.println("Number of friends: " + friends.size());
     }
+
+    public void printDetails(Age age) {
+        if (age.getYears() > 18) {
+            if (lover == null) {
+                System.out.println("Single");
+            } else if (!lover.isMarried()) {
+                System.out.println("Dating");
+                System.out.println("Closeness: " + lover.getCloseness());
+            } else {
+                System.out.println("Married");
+                System.out.println("Closeness: " + lover.getCloseness());
+            }
+            System.out.println("Number of dependants: " + dependents.size());
+        } else {
+            System.out.println("Number of caretakers: " + caretakers.size());
+        }
+        System.out.println("Number of other family members: " + family.size());
+        System.out.println("Number of friends: " + friends.size());
+    }
 }

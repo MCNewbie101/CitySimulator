@@ -190,4 +190,19 @@ public class Personality {
     public void setCareerPreferences(int[] careerPreferences) {
         this.careerPreferences = careerPreferences;
     }
+
+    public void printInfo() {
+        System.out.println("Personality:");
+        System.out.println("Aggressiveness: " + aggressiveness);
+        System.out.println("Confidence: " + confidence);
+        System.out.println("Sociability: " + sociability);
+        System.out.println("Impulsiveness: " + impulsiveness);
+        System.out.println("Openness: " + openness);
+        System.out.println("Selfishness: " + selfishness);
+        System.out.println("Career Preferences:");
+        String[] careerNames = {"Actor", "Artist", "Author", "Basketball Player", "Construction Worker", "DeliveryPerson", "Musician", "Programmer", "Receptionist", "Waiter"};
+        for (int i = 0; i < careerNames.length; i++) {
+            System.out.println(careerNames[i] + ": " + careerPreferences[i]);
+        }
+    }
 }
