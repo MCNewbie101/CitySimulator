@@ -10,6 +10,9 @@ public abstract class Building {
     private Age age;
     private Position position;
 
+    /*
+     * Generate a building randomly
+     */
     public Building() {
         value = Math.random() * 10000000;
         while (value < 500000 || value > 800000) {
@@ -22,6 +25,9 @@ public abstract class Building {
         position = new Position();
     }
 
+    /*
+     * Generate a building using inputted values
+     */
     public Building(double value, boolean usable, Age age, Position position) {
         this.value = value;
         this.usable = usable;
@@ -29,6 +35,9 @@ public abstract class Building {
         this.position = position;
     }
 
+    /*
+     * Updates a building
+     */
     public void update(World world, int daysPerYear) {
         age.update(daysPerYear);
         double gen = Math.random();

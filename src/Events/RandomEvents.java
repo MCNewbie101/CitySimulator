@@ -20,6 +20,10 @@ public class RandomEvents {
         }
     }
 
+    /*
+     * Simulate a death
+     * Removes a human from the world and removes any relations with the human
+     */
     public static void humanDeath(Human human, World world) {
         world.getBin().add(human);
         if (human.getRelations().getLover() != null) {
@@ -93,6 +97,10 @@ public class RandomEvents {
         check.getRelations().getDependentRelations().remove(dependent);
     }
 
+    /*
+     * Splits a dead person's money
+     * Calculate if the dead person's dependants gets adopted, and by who
+     */
     public static void inheritance(Human human, World world) {
         double split = 0;
         for (Dependent dependent : human.getRelations().getDependentRelations()) {

@@ -26,6 +26,9 @@ public class Human {
     private int s;
     private boolean isAlive;
 
+    /*
+     * Randomly generate a human
+     */
     public Human(World world) {
         age = new Age((int) (Math.random() * 12) + 18, (int) (Math.random() * world.getDaysPerYear()));
         if (Math.random() * 2 < 1) {
@@ -73,6 +76,9 @@ public class Human {
         isAlive = true;
     }
 
+    /*
+     * Generate a human using information of parents
+     */
     public Human(Human parent1, Human parent2) {
         age = new Age();
         if (Math.random() * 2 < 1) {
@@ -95,6 +101,9 @@ public class Human {
         isAlive = true;
     }
 
+    /*
+     * Create a human using inputted information
+     */
     public Human(World world, Age age, String gender, Skills skills, Education education, Attributes attributes, BankAccount bankAccount) {
         this.age = age;
         this.gender = gender;
@@ -112,6 +121,9 @@ public class Human {
         isAlive = true;
     }
 
+    /*
+     * Creates a human using less detailed information
+     */
     public Human(World world, Age age, String gender, Skills skills,  BankAccount bankAccount) {
         this.age = age;
         this.gender = gender;
@@ -129,6 +141,9 @@ public class Human {
         isAlive = true;
     }
 
+    /*
+     * Updates variables of the person for each day
+     */
     public void update(World world) {
         if (!isAlive) {
             if (bankAccount != null) {
@@ -309,6 +324,9 @@ public class Human {
         }
     }
 
+    /*
+     * Simulating how family members and friends often offers assistance to each other in human society
+     */
     private void aid(Human human) {
         if (bankAccount.getDeposit() < 30000 && attributes.getPersonality().getSelfishness() > 5) {
             return;
