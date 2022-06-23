@@ -21,6 +21,11 @@ public class Relations {
         friends = new ArrayList<>();
     }
 
+    /*
+     * Generate relations based on parents
+     * Add family of parents as family
+     * Add parents as caretakers
+     */
     public Relations(Human self, Human parent1, Human parent2) {
         caretakers = new ArrayList<>();
         caretakers.add(new Caretaker(self, parent1));
@@ -48,6 +53,10 @@ public class Relations {
         lover = null;
     }
 
+    /*
+     * Updates relations
+     * Changes closeness
+     */
     public void update (int daysPerYear) {
         if (lover != null) {
             lover.update(daysPerYear);

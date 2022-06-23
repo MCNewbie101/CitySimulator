@@ -4,6 +4,7 @@ import Actors.Human;
 import Events.RandomEvents;
 import GameSystems.Skills.Skills;
 
+
 public abstract class Career {
     private double base;
     private double salary;
@@ -22,6 +23,9 @@ public abstract class Career {
         taken = false;
     }
 
+    /*
+     * Creates a career object using inputted values
+     */
     public Career(double base, double salary, int salaryGrowth, int satisfaction, int performance, Skills skills, boolean taken, int retirementAge, int careerID) {
         this.base = base;
         this.salary = salary;
@@ -34,6 +38,12 @@ public abstract class Career {
         this.careerID = careerID;
     }
 
+    /*
+     * Updates the career
+     * Changes performance and salary variables
+     * Fires person if performance is too low
+     * Have the person quit if satisfaction is too low
+     */
     public void update(Human human) {
         int temp = this.skills.checkSkills(human.getSkills()) + 10;
         temp += Math.random() * human.getAttributes().getHappiness() + Math.random() * human.getAttributes().getHealth();

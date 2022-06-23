@@ -4,6 +4,9 @@ import GameSystems.Position;
 import GameSystems.Age;
 import World.World;
 
+/*
+ * Keeps track of the value and age of a building, and whether it is usable
+ */
 public abstract class Building {
     private double value;
     private boolean usable;

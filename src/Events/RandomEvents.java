@@ -224,6 +224,9 @@ public class RandomEvents {
         }
     }
 
+    /*
+     * Searches through available housing to see if a human can buy one
+     */
     public static void houseSearch(Human human, World world) {
         if (!human.isAlive()) {
             return;
@@ -254,6 +257,9 @@ public class RandomEvents {
         }
     }
 
+    /*
+     * Generates a house
+     */
     public static void buildHouse(World world) {
         if (world.getCityBudget() < 100000) {
             return;
@@ -279,6 +285,9 @@ public class RandomEvents {
         world.citySpending(value);
     }
 
+    /*
+     * Repairs a house
+     */
     public static void repairHouse(World world, House house) {
         if (house.isUsable()) {
             return;
@@ -300,6 +309,9 @@ public class RandomEvents {
         }
     }
 
+    /*
+     * Goes through the list of jobs in a city and see if a human is compatible with one
+     */
     public static void jobSearch(Human human, World world) {
         if (!human.isAlive()) {
             return;
@@ -344,6 +356,9 @@ public class RandomEvents {
         RandomEvents.nullifyJob(human);
     }
 
+    /*
+     * Generates a new job
+     */
     public static void careerOption(World world) {
         int gen = (int) (Math.random() * 22);
         if (gen == 0) {
@@ -369,6 +384,9 @@ public class RandomEvents {
         }
     }
 
+    /*
+     * Has a change of creating a romance relation between two humans
+     */
     public static void findDate(Human human, World world) {
         if (!human.isAlive()) {
             return;
@@ -407,6 +425,9 @@ public class RandomEvents {
         }
     }
 
+    /*
+     * Adds a romance relation between two humans
+     */
     private static boolean addRomance(Human human, Human human1) {
         if (human.getAttributes().getPersonality().compatibility(human1.getAttributes().getPersonality()) > Math.random() * 100) {
             human.getRelations().setLover(new Romantic(human, human1));
@@ -422,6 +443,10 @@ public class RandomEvents {
         return false;
     }
 
+    /*
+     * Set a romance relation to married
+     * Combines bank accounts and create family relations between the families of each human with the other human
+     */
     public static void marriage(Human human, int daysPerYear) {
         if (Math.random() * daysPerYear > 3) {
             return;
@@ -474,6 +499,10 @@ public class RandomEvents {
         }
     }
 
+    /*
+     * Makes the dependents of human1 also the dependents of human
+     * Makes the family of human also the family of dependents of human1
+     */
     private static void marriageAddDependents(Human human, Human human1) {
         for (Human dependent : human1.getRelations().getDependents()) {
             if (!dependent.isAlive()) {
@@ -530,6 +559,9 @@ public class RandomEvents {
         }
     }
 
+    /*
+     * Has a chance of creating a child of a human
+     */
     public static void childBirth(Human human, World world) {
         if (!human.isAlive() || ! human.getRelations().getLover().getPerson().isAlive()) {
             return;
@@ -586,6 +618,9 @@ public class RandomEvents {
         }
     }
 
+    /*
+     * Erases romance relation between two humans
+     */
     public static void breakup(Romantic romantic) {
         if (!romantic.getSelf().isAlive() || !romantic.getPerson().isAlive()) {
             return;
@@ -615,6 +650,9 @@ public class RandomEvents {
         }
     }
 
+    /*
+     * Has a change to add a new platonic relation to a human
+     */
     public static void newFriend(Human human, World world) {
         if (!human.isAlive()) {
             return;
@@ -629,7 +667,6 @@ public class RandomEvents {
             return;
         }
         for (Human human1 : world.getHumans()) {
-            //TODO: Make it so that more friends = less likely to get even more friends
             if (!human1.isAlive()) {
                 continue;
             }
@@ -648,12 +685,17 @@ public class RandomEvents {
                 continue;
             }
             if (Math.random() * human.getAttributes().getPersonality().compatibility(human1.getAttributes().getPersonality()) > 50) {
-                human.getRelations().getFriendships().add(new Platonic(human, human1));
-                human1.getRelations().getFriendships().add(new Platonic(human1, human));
+                if (Math.random() * human.getRelations().getFriendships().size() <= 3) {
+                    human.getRelations().getFriendships().add(new Platonic(human, human1));
+                    human1.getRelations().getFriendships().add(new Platonic(human1, human));
+                }
             }
         }
     }
 
+    /*
+     * Removes a platonic relation
+     */
     public static void unFriend(ArrayList<Platonic> remove, Platonic platonic) {
         if (!platonic.getSelf().isAlive() || !platonic.getPerson().isAlive()) {
             return;

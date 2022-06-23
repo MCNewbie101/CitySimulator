@@ -12,6 +12,9 @@ import GameSystems.Relations.Relations;
 import GameSystems.Skills.Skills;
 import World.World;
 
+/*
+ * Keeps track of the age, gender, skills, career, property, and attributes of a human
+ */
 public class Human {
     private Age age;
     private String gender;
