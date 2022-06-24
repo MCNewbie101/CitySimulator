@@ -19,6 +19,9 @@ public class BankAccount {
         this.deposit = deposit;
     }
 
+    /*
+     * Updates a human's deposit based on career and housing status
+     */
     public void update(Career job, Retired retired, World world, House house, int daysPerYear) {
         deposit += deposit * INTEREST_RATE / daysPerYear;
         double earning = 0;

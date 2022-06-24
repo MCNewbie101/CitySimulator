@@ -39,6 +39,9 @@ public class Attributes {
         this.trauma = trauma;
     }
 
+    /*
+     * Updates a human's attributes
+     */
     public void update(Human human, int daysPerYear) {
         health += (Math.random() - Math.random()) * 5 / daysPerYear;
         health += Math.random() * 0.3 * (70 - human.getAge().getYears()) / daysPerYear;
@@ -56,8 +59,6 @@ public class Attributes {
         }
         happiness += (Math.random() - Math.random()) * 30;
         happiness += Math.random() * (health - 70);
-        //TODO: Add caretaker and dependent here, remove attributes updates from caretaker class
-        //TODO: Fix how abusiveness affect happiness
         if (human.getRelations().getLover() != null) {
             happiness -= human.getRelations().getLover().getAbusivenessFrom() * human.getRelations().getLover().getCloseness() / 5.0 / daysPerYear;
         }
@@ -106,6 +107,9 @@ public class Attributes {
         trauma += 2;
     }
 
+    /*
+     * Checks that attributes are within bounds
+     */
     private void checkInBounds(Human human) {
         if (health <= 0) {
             human.setAlive(false);
@@ -128,6 +132,9 @@ public class Attributes {
         trauma += 3;
     }
 
+    /*
+     * Change attributes depending on how much money a human has
+     */
     public void updateMoney(Human human, BankAccount bankAccount, int daysPerYear) {
         if (bankAccount == null) {
             happiness -= 50.0 / daysPerYear;

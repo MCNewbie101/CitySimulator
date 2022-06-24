@@ -87,6 +87,10 @@ public class Skills {
         this.social = social;
     }
 
+    /*
+     * Compares each skill of a human to skill requirements for a job
+     * Returns the sum of the difference
+     */
     public int checkSkills(Skills skills) {
         int sum = 0;
         if (skills.getCreativity() != null) {

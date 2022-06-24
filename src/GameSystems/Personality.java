@@ -93,6 +93,9 @@ public class Personality {
         generateCareerPreferences();
     }
 
+    /*
+     * Generates career preferences based on personality
+     */
     public void generateCareerPreferences() {
         careerPreferences = new int[10];
         careerPreferences[0] = (int) (confidence + sociability / 2 - Math.random() * 50);
@@ -115,6 +118,9 @@ public class Personality {
         }
     }
 
+    /*
+     * Checks how compatible two people are
+     */
     public int compatibility(Personality personality) {
         int sum = 100;
         if (personality.getAggressiveness() + aggressiveness > 100) {

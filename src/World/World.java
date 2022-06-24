@@ -10,8 +10,8 @@ import java.util.ArrayList;
 public class World {
     private int daysPerYear;
     private int daysPerUpdate;
-    private int skillIncreaseBalancing;
-    private int jobSkillIncreaseBalancing;
+    private int skillIncreaseBalancing; //Balances how fast skills increase. The higher the number, the slower skills increase.
+    private int jobSkillIncreaseBalancing; // Similar to the one above, but balances how fast careers increase skills
 
     private ArrayList<House> houses;
     private ArrayList<Human> humans;
@@ -49,10 +49,19 @@ public class World {
         }
     }
 
+    /*
+     * Not yet implemented
+     */
     public void updateController() {
         //TODO: Run update every secondsPerDay seconds
     }
 
+    /*
+     * Updates every human and house in the simulated world
+     * Removes dead humans from the list of humans
+     * Add new humans to the list of humans
+     * Generates new houses and jobs
+     */
     public void update() {
         RandomEvents.humanMoveIn(this);
         for (House house : houses) {
@@ -86,6 +95,9 @@ public class World {
         }
     }
 
+    /*
+     * Simulates welfare
+     */
     public void aid(Human human) {
         double aid = 30000 - human.getBankAccount().getDeposit() * 0.7;
         aid += human.getRelations().getDependentRelations().size() * 3000;

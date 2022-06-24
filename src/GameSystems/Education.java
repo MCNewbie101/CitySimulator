@@ -20,6 +20,9 @@ public class Education{
         this.grade = grade;
     }
 
+    /*
+     * Update a student's grades
+     */
     public void update(Skills skills, Attributes attributes, int skillIncreaseBalancing, int jobSkillIncreaseBalancing, int daysPerYear) {
         int temp = 0;
         temp += skills.getCreativity().getArt() / 50;

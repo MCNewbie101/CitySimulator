@@ -1,3 +1,6 @@
+/*
+ * Not yet implemented
+ */
 public class Ticker extends Thread {
     private boolean paused;
 
